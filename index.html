@@ -386,9 +386,39 @@
     *{animation:none !important;transition:none !important}
     html{scroll-behavior:auto}
   }
+
+/* ===== WEBSITE LOCK SYSTEM ===== */
+#site-lock{
+ position:fixed;inset:0;z-index:9999;
+ display:flex;align-items:center;justify-content:center;
+ text-align:center;padding:25px;
+ background:linear-gradient(160deg,#dceef9,#eef8fd,#fbdfe6);
+ color:#2f4d6b;
+}
+#site-lock .lock-box{
+ background:rgba(255,255,255,.85);
+ padding:45px 30px;
+ border-radius:24px;
+ box-shadow:0 18px 40px -18px rgba(46,90,127,.45);
+ max-width:420px;
+}
+#site-lock h1{font-family:'Great Vibes',cursive;font-size:3rem;margin-bottom:15px;}
+#site-lock p{font-weight:300;}
+#site-lock .date{font-weight:600;margin-top:15px;color:#4a7ba6;}
+
 </style>
 </head>
 <body>
+
+<div id="site-lock">
+ <div class="lock-box">
+  <h1>Untuk Kamu</h1>
+  <p>Halaman ini belum dapat dibuka.</p>
+  <p>Silakan kembali pada waktu yang telah ditentukan.</p>
+  <p class="date">12 September 2026 | 00.00</p>
+ </div>
+</div>
+
 
 <div id="hearts-layer"></div>
 <canvas id="confetti-canvas"></canvas>
@@ -983,6 +1013,19 @@
 
   /* init loose hearts even before intro */
   for(var i=0;i<10;i++){ spawnHeart(false); }
+})();
+</script>
+
+<script>
+(function(){
+ const target = new Date('2026-09-12T00:00:00').getTime();
+ const opened = localStorage.getItem('website_opened');
+ const now = new Date().getTime();
+ const lock = document.getElementById('site-lock');
+ if(opened === 'true' || now >= target){
+   localStorage.setItem('website_opened','true');
+   if(lock) lock.style.display='none';
+ }
 })();
 </script>
 </body>
