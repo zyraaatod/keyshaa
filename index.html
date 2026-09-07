@@ -4,11 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#b9d8ec">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Untuk Kamu yang Teristimewa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
+  /* ================================================================
+     PETA KELOMPOK CSS  (cari penanda [CSS 1] s.d. [CSS 27] di bawah)
+     ================================================================
+     [CSS 1] Warna & font tema        [CSS 2] Reset dasar
+     [CSS 3] Hati melayang            [CSS 4] Balon utama
+     [CSS 5] Balon sudut kiri/kanan   [CSS 6] Bunting (hiasan gantung)
+     [CSS 7] Canvas konfeti           [CSS 8] Intro / tombol hati
+     [CSS 9] Balon intro              [CSS10] Wrapper & judul section
+     [CSS11] Hero (judul atas)        [CSS12] Galeri foto (polaroid)
+     [CSS13] Surat lengkap            [CSS14] Kue ulang tahun
+     [CSS15] Bagian penutup           [CSS16] Tombol musik & panah atas
+     [CSS17] Animasi reveal           [CSS18] Footer + media HP umum
+     [CSS19] Kartu aplikasi+popup buku surat
+     [CSS20] Popup galeri ala-chat    [CSS21] Layar kunci
+     [CSS22] Optimasi HP (lebar 520)  [CSS23] HP kecil (lebar 360)
+     [CSS24] Bar bacaan + judul mini  [CSS25] Amplop + segel lilin
+     [CSS26] WhatsApp                 [CSS27] Mode hemat (HP lemah)
+     ================================================================ */
   :root{
     --ink:#2f4d6b;
     --ink-soft:#5b7a99;
@@ -27,6 +48,13 @@
     --script:'Great Vibes', cursive;
     --sans:'Poppins', sans-serif;
   }
+  /* ================================================================
+     [CSS 1] WARNA & FONT TEMA
+     ================================================================
+     Semua warna utama dipegang dari sini. Ganti nilai --blue-* / --pink
+     / --ink untuk mengganti tema seluruh halaman (biru + pink).
+     ================================================================ */
+  /* [CSS 2] RESET DASAR — jarak/batas default semua elemen */
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   button,a,input,select,textarea{touch-action:manipulation}
@@ -42,7 +70,8 @@
   ::selection{background:var(--pink);color:var(--ink)}
   h1,h2,h3{line-height:1.25}
 
-  /* ---------- floating hearts ---------- */
+  /* [CSS 3] HATI MELAYANG — hati kecil naik di latar belakang halaman.
+     Jumlahnya diatur dari JS [JS 7] (var maxHearts). */
   #hearts-layer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
   .heart{position:absolute;bottom:-40px;animation:floatUp linear infinite;opacity:0}
   .heart svg{display:block;filter:drop-shadow(0 4px 10px rgba(46,90,127,.18))}
@@ -53,7 +82,8 @@
     100%{transform:translateY(-110vh) translateX(var(--dx,30px)) rotate(18deg) scale(var(--s,1));opacity:0}
   }
 
-  /* ---------- main balloons ---------- */
+  /* [CSS 4] BALON UTAMA — balon besar naik di latar halaman utama.
+     Diciptakan oleh JS [JS 8]. */
   #balloons-layer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
   .balloon-up{position:absolute;bottom:-150px;animation:balloonUp linear infinite;opacity:0}
   .balloon-up svg{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 12px rgba(46,90,127,.16))}
@@ -64,7 +94,8 @@
     100%{transform:translate(var(--bdx,50px),-115vh) rotate(9deg);opacity:0}
   }
 
-  /* ---------- corner balloons (kiri kanan bawah, goyang pelan) ---------- */
+  /* [CSS 5] BALON SUDUT KIRI KANAN BAWAH — hiasan balon goyang-goyang
+     di pojok bawah. Gambar balonnya ada di body [BODY 2]. */
   #balloon-deco{position:fixed;left:0;right:0;bottom:0;z-index:3;pointer-events:none}
   #balloon-deco .bunch{position:absolute;bottom:6px;display:flex;align-items:flex-end;transform-origin:50% 100%}
   #balloon-deco .bunch.left{left:4vw}
@@ -83,7 +114,8 @@
   @keyframes bunchSway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
   @keyframes bdSway{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
 
-  /* ---------- bunting: hiasan gantung di atas ---------- */
+  /* [CSS 6] BUNTING — hiasan gantung (umbul-umbul + balon kecil) di atas
+     layar. Dibuat otomatis oleh JS [JS 9]. */
   #bunting{position:fixed;top:0;left:0;right:0;height:86px;z-index:3;pointer-events:none;overflow:visible}
   #bunting .bunt-line{position:absolute;top:5px;left:0;right:0}
   #bunting .bunt-line svg{display:block;width:100%;height:22px}
@@ -95,10 +127,12 @@
   #bunting .bunt-balloon.right-ball{right:10px;animation-duration:4.6s;animation-delay:.7s}
   @keyframes flagFlutter{0%,100%{transform:rotate(-2.2deg)}50%{transform:rotate(2.2deg)}}
 
-  /* ---------- confetti canvas ---------- */
+  /* [CSS 7] CANVAS KONFETI — tempat kertas konfeti digambar.
+     Logika konfetinya di JS [JS 10] (fungsi burstConfetti). */
   #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:60}
 
-  /* ---------- intro ---------- */
+  /* [CSS 8] LAYAR INTRO — layar pembuka sebelum masuk (teks + tombol hati).
+     Semua teks di layar ini ada di body [BODY 3]. */
   #intro{
     position:fixed;inset:0;z-index:100;overflow:hidden;
     display:flex;align-items:center;justify-content:center;text-align:center;
@@ -180,7 +214,8 @@
   .intro-heart-f{position:absolute;bottom:-30px;opacity:0;pointer-events:none}
   .intro-heart-f svg{display:block;fill:#fff;filter:drop-shadow(0 4px 10px rgba(46,90,127,.18))}
 
-  /* ---------- intro balloons ---------- */
+  /* [CSS 9] BALON DI LAYAR INTRO — balon yang meletus saat hati disentuh.
+     Logikanya di JS [JS 5]. */
   #intro-balloons{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
   .balloon{position:absolute;width:58px;height:106px;animation:balloonBob ease-in-out infinite;will-change:transform}
   .balloon svg{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 14px rgba(46,90,127,.2))}
@@ -195,7 +230,7 @@
     100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.35) rotate(180deg);opacity:0}
   }
 
-  /* ---------- main wrapper ---------- */
+  /* [CSS 10] WRAPPER UTAMA + JUDUL SECTION — style umum tiap bagian */
   main{position:relative;z-index:2}
   section{max-width:880px;margin:0 auto;padding:clamp(64px,12vw,120px) 22px}
 
@@ -210,7 +245,8 @@
   .section-sub{text-align:center;color:var(--ink-soft);font-weight:300;max-width:520px;margin:0 auto 44px;font-size:.95rem}
   .divider{width:72px;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,var(--pink),transparent);margin:0 auto}
 
-  /* ---------- hero ---------- */
+  /* [CSS 11] HERO — bagian teratas: teks "Selamat Ulang Tahun", nama,
+     dan tulisan efek mengetik. Teksnya ada di body [BODY 4]. */
   #hero{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 22px}
   .halo{font-size:.82rem;letter-spacing:5px;text-transform:uppercase;color:var(--blue-700);font-weight:500;margin-bottom:18px;opacity:.9}
   #hero h1{
@@ -227,7 +263,8 @@
   .scroll-hint .bounce{animation:scrollBounce 2s ease-in-out infinite;opacity:.75}
   @keyframes scrollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
 
-  /* ---------- gallery ---------- */
+  /* [CSS 12] GALERI FOTO — kartu, bingkai polaroid, tombol panah, titik
+     navigasi. Daftar fotonya diubah di JS [JS 2] (var PHOTOS). */
   .card{
     background:rgba(255,255,255,.82);
     backdrop-filter:blur(12px);
@@ -239,15 +276,30 @@
   .gallery-wrap{position:relative}
   .gallery-viewport{overflow:hidden;border-radius:18px}
   .gallery-track{display:flex;transition:transform .7s cubic-bezier(.22,.61,.36,1)}
-  .gallery-slide{min-width:100%;padding:10px;display:flex;justify-content:center}
+  .gallery-slide{min-width:100%;padding:30px 10px 10px;display:flex;justify-content:center}
   .polaroid{
-    background:#fff;padding:14px 14px 18px;border-radius:14px;
-    box-shadow:0 16px 34px -16px rgba(46,90,127,.5);
-    transform:rotate(var(--tilt,0deg));
+    position:relative;
+    background:#fff;padding:12px 12px 16px;border-radius:6px;
+    box-shadow:0 16px 34px -16px rgba(46,90,127,.5),0 4px 12px rgba(46,90,127,.16);
+    transform:translateY(var(--drop,0px)) rotate(var(--tilt,0deg));
     max-width:340px;width:100%;
+    transition:transform .4s cubic-bezier(.22,.61,.36,1);
   }
+  .polaroid::before{
+    content:"";position:absolute;top:-12px;left:50%;width:88px;height:26px;
+    background:var(--tape,rgba(242,182,196,.55));
+    transform:translateX(-50%) rotate(-5deg);
+    border-radius:3px;opacity:.92;
+    box-shadow:0 3px 8px rgba(46,90,127,.16);
+  }
+  .polaroid::after{
+    content:"";position:absolute;top:-7px;right:14px;width:11px;height:11px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#ffe9f0,#e97f9c 60%,#c05f7e);
+    box-shadow:0 2px 5px rgba(46,90,127,.4);
+  }
+  .polaroid:hover{transform:translateY(0) rotate(0deg) scale(1.03);z-index:3}
   .polaroid .photo-frame{
-    width:100%;aspect-ratio:1/1.12;border-radius:8px;overflow:hidden;
+    width:100%;aspect-ratio:1/1.12;border-radius:6px;overflow:hidden;
     display:flex;align-items:center;justify-content:center;
     background:linear-gradient(160deg,var(--g1,#cfe4f3),var(--g2,#a6cbe4));
     position:relative;
@@ -275,7 +327,8 @@
   .dot.active{background:var(--pink);width:26px;border-radius:6px}
   .gallery-count{text-align:center;margin-top:12px;color:var(--ink-soft);font-size:.8rem;letter-spacing:1px}
 
-  /* ---------- letter ---------- */
+  /* [CSS 13] SURAT — kertas surat, garis-garis, tanda tangan.
+     Isi teks surat diubah di JS [JS 13] (var letterLines). */
   .letter-body{max-width:640px;margin:0 auto}
   .letter-paper{
     position:relative;background:#ffffff;border-radius:18px;padding:clamp(26px,6vw,50px);
@@ -303,72 +356,108 @@
   .letter-line.show{opacity:1;transform:translateY(0)}
   .letter-sign{font-family:var(--script);font-size:1.9rem;color:var(--blue-900);text-align:right;margin-top:22px}
 
-  /* ---------- reasons ---------- */
-  .reasons-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
-  .reason{
-    background:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.75);
-    border-radius:18px;padding:26px 22px;text-align:center;
-    box-shadow:var(--shadow);cursor:default;
-    transition:transform .35s ease,box-shadow .35s ease;
-    position:relative;overflow:hidden;
-  }
-  .reason:hover{transform:translateY(-8px) rotate(1deg);box-shadow:0 26px 46px -18px rgba(46,90,127,.55)}
-  .reason .num{
-    font-family:var(--script);font-size:2rem;color:var(--pink);line-height:1;
-  }
-  .reason h4{color:var(--blue-900);font-size:.95rem;margin-top:8px;font-weight:600}
-  .reason p{font-size:.78rem;color:var(--ink-soft);font-weight:300;margin-top:4px}
-  .reason .heart-mark{position:absolute;top:-14px;right:-14px;font-size:2.4rem;opacity:.12}
-
-  /* ---------- cake ---------- */
+  /* [CSS 14] KUE ULANG TAHUN — tampilan kue, lilin, dan api.
+     Jumlah & warna lilin diubah di body [BODY 7]. */
   #cake-section .card{text-align:center}
-  .cake-stage{position:relative;height:250px;max-width:340px;margin:0 auto}
+  .cake-stage{position:relative;height:270px;max-width:360px;margin:0 auto}
+  .cake-stage::before{
+    content:"";position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);
+    width:320px;height:230px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.9),rgba(207,228,243,.4) 55%,rgba(207,228,243,0) 72%);
+    pointer-events:none;
+  }
   .plate{
     position:absolute;bottom:0;left:50%;transform:translateX(-50%);
-    width:230px;height:18px;border-radius:12px;
-    background:linear-gradient(180deg,#fff, #dceefc);
-    box-shadow:0 6px 18px rgba(46,90,127,.28);
+    width:244px;height:16px;border-radius:14px;
+    background:linear-gradient(180deg,#ffffff,#eaf4fd 65%,#cfe4f3);
+    box-shadow:0 8px 22px rgba(46,90,127,.35),inset 0 2px 3px rgba(255,255,255,.95);
+  }
+  .plate::after{
+    content:"";position:absolute;left:9%;right:9%;top:2px;height:5px;border-radius:50%;
+    background:rgba(255,255,255,.85);filter:blur(1px);
   }
   .layer{
     position:absolute;left:50%;transform:translateX(-50%);border-radius:10px;
-    box-shadow:inset 0 -12px 0 rgba(46,90,127,.10),0 8px 16px rgba(46,90,127,.18);
+    box-shadow:inset 0 -12px 0 rgba(46,90,127,.10),0 10px 20px rgba(46,90,127,.20);
   }
   .layer.tall{
-    bottom:18px;width:210px;height:72px;
-    background:linear-gradient(180deg,#fdf6fb,#f0e0f4);
+    bottom:18px;width:210px;height:78px;
+    background:linear-gradient(180deg,#fdf3f7,#f1e0ee);
   }
   .layer.mid{
-    bottom:90px;width:170px;height:60px;
-    background:linear-gradient(180deg,#e6f4fd,#cfe8f7);
+    bottom:96px;width:172px;height:64px;
+    background:linear-gradient(180deg,#e8f5ff,#d9edfb);
   }
   .layer.top{
-    bottom:150px;width:130px;height:52px;
-    background:linear-gradient(180deg,#fdeef2,#f7d7df);
+    bottom:160px;width:132px;height:58px;
+    background:linear-gradient(180deg,#ffe2e9,#fbcfd9);
+    border-radius:10px 10px 14px 14px;
   }
-  .icing{position:absolute;width:100%;height:14px;background:#ffffff;border-radius:8px;box-shadow:0 4px 10px rgba(46,90,127,.12)}
-  .layer .icing{top:-7px}
-  .tip{position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);width:86px;height:26px;background:#fff5f8;border-radius:50%}
-  .candle-row{position:absolute;bottom:198px;left:50%;transform:translateX(-50%);display:flex;gap:14px;justify-content:center;width:150px}
+  .layer.mid::after,.layer.tall::after{
+    content:"";position:absolute;top:9px;left:15%;right:15%;height:9px;
+    background-image:
+      radial-gradient(circle 3px at 18% 50%,#f2b6c4 99%,transparent),
+      radial-gradient(circle 3px at 38% 70%,#8fbce0 99%,transparent),
+      radial-gradient(circle 3px at 56% 45%,#f6cd7e 99%,transparent),
+      radial-gradient(circle 3px at 74% 65%,#a9dcc7 99%,transparent),
+      radial-gradient(circle 3px at 90% 48%,#e3b3d3 99%,transparent);
+  }
+  .icing{position:absolute;width:100%;height:15px;background:#ffffff;border-radius:8px;box-shadow:0 4px 10px rgba(46,90,127,.12)}
+  .layer .icing{top:-8px}
+  .layer.top .icing{
+    background:linear-gradient(180deg,#ffffff,#ffeaf1);
+    box-shadow:0 3px 7px rgba(233,127,156,.18);
+  }
+  .layer.top .icing::before{
+    content:"";position:absolute;top:10px;left:7%;width:16px;height:22px;border-radius:0 0 60% 60%;
+    background:#ffeaf1;
+    box-shadow:46px 0 0 #fff1f6,92px 0 0 #ffeaf1;
+    filter:drop-shadow(0 1px 1px rgba(233,127,156,.15));
+  }
+  .tip{position:absolute;bottom:-3px;left:50%;transform:translateX(-50%);width:96px;height:20px;background:#ffe8ee;border-radius:6px 6px 14px 14px;box-shadow:0 2px 6px rgba(233,127,156,.28)}
+  .cake-heart{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);width:24px;height:22px;filter:drop-shadow(0 3px 4px rgba(46,90,127,.28))}
+  #cake-balloons{position:absolute;inset:-16px 0 -8px 0;pointer-events:none;z-index:0}
+  #cake-balloons .cb{position:absolute;opacity:.92;filter:drop-shadow(0 6px 10px rgba(46,90,127,.16));animation:cbSway 6s ease-in-out infinite}
+  #cake-balloons .cb svg{width:100%;height:100%;display:block}
+  @keyframes cbSway{0%,100%{transform:translateX(0) rotate(-5deg)}50%{transform:translateX(9px) rotate(5deg)}}
+  .candle-row{position:absolute;bottom:214px;left:50%;transform:translateX(-50%);display:flex;gap:12px;justify-content:center;width:130px}
   .candle{
-    position:relative;width:14px;height:46px;border-radius:5px 5px 4px 4px;cursor:pointer;border:none;
-    background:linear-gradient(180deg,var(--c1,#8fbce0),var(--c2,#5b8db8));
-    box-shadow:0 4px 8px rgba(46,90,127,.25);
+    position:relative;width:16px;height:50px;border-radius:3px 3px 4px 4px;cursor:pointer;border:none;
+    background:
+      repeating-linear-gradient(45deg,rgba(255,255,255,.35) 0 4px,rgba(255,255,255,0) 4px 8px),
+      linear-gradient(180deg,var(--c1,#8fbce0),var(--c2,#5b8db8));
+    box-shadow:0 5px 10px rgba(46,90,127,.30),inset 0 1px 0 rgba(255,255,255,.55);
     transform-origin:center bottom;
     transition:transform .2s ease;
   }
   .candle:hover{transform:scale(1.12)}
-  .candle::after{content:"";position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:6px;height:9px;border-radius:50% 50% 60% 60%;background:linear-gradient(#ffe8a3,#ffbf69)}
+  .candle::after{
+    content:"";position:absolute;top:-3px;left:50%;transform:translateX(-50%);
+    width:2px;height:6px;background:#8ba0b0;border-radius:2px;
+  }
   .flame{
-    position:absolute;top:-24px;left:50%;transform:translateX(-50%);
-    width:14px;height:20px;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;
-    background:radial-gradient(circle at 50% 75%,#fff6d8 0%,#ffd580 45%,#ff9f43 80%,transparent);
+    position:absolute;top:-27px;left:50%;transform:translateX(-50%);
+    width:16px;height:23px;border-radius:50% 50% 50% 50%/68% 68% 32% 32%;
+    background:radial-gradient(circle at 50% 78%,#fffdf0 0%,#ffe9a8 40%,#ffb94f 70%,rgba(255,150,60,0) 78%);
+    box-shadow:
+      0 0 10px 3px rgba(255,214,130,.5),
+      0 0 26px 9px rgba(255,170,80,.28);
     animation:flicker .35s ease-in-out infinite;
     transition:opacity .4s ease,transform .4s ease;
-    filter:drop-shadow(0 0 8px rgba(255,190,90,.8));
   }
-  @keyframes flicker{0%,100%{transform:translateX(-50%) scale(1) rotate(-2deg)}50%{transform:translateX(-50%) scale(1.12,1.05) rotate(2deg)}}
-  .candle.out .flame{opacity:0;transform:translateX(-50%) scale(0.2);animation:none}
-  .candle.out{background:linear-gradient(180deg,var(--c1,#8fbce0),var(--c2,#5b8db8));filter:saturate(.6)}
+  .flame::after{
+    content:"";position:absolute;left:50%;bottom:10%;transform:translateX(-50%);
+    width:7px;height:10px;border-radius:50%;
+    background:radial-gradient(circle at 50% 55%,#ffffff,#ffd86b 70%);
+  }
+  @keyframes flicker{0%,100%{transform:translateX(-50%) scale(1) rotate(-2deg)}50%{transform:translateX(-50%) scale(1.12,1.06) rotate(2deg)}}
+  .candle.out .flame{opacity:0;transform:translateX(-50%) scale(.2);animation:none}
+  .candle.out{
+    background:
+      repeating-linear-gradient(45deg,rgba(255,255,255,.35) 0 4px,rgba(255,255,255,0) 4px 8px),
+      linear-gradient(180deg,var(--c1,#8fbce0),var(--c2,#5b8db8));
+    filter:saturate(.6);
+  }
   .smoke{position:absolute;top:-30px;left:50%;width:8px;height:8px;border-radius:50%;background:rgba(120,150,180,.4);pointer-events:none;animation:smokeUp 1.4s ease-out forwards}
   @keyframes smokeUp{0%{opacity:.7;transform:translate(-4px,0) scale(.6)}100%{opacity:0;transform:translate(-14px,-46px) scale(1.6)}}
   .cake-hint{margin-top:26px;font-weight:300;color:var(--ink-soft);font-size:.9rem;min-height:1.5em}
@@ -382,16 +471,9 @@
   .wish-reveal .script{font-family:var(--script);font-size:1.9rem;color:var(--blue-900)}
   .wish-reveal .sub{font-size:.8rem;color:var(--ink-soft);font-weight:300;margin-top:4px}
 
-  /* ---------- final ---------- */
+  /* [CSS 15] PENUTUP — bagian terakhir: ring hati + kalimat penutup.
+     Teksnya diubah di body [BODY 8]. */
   #final{text-align:center;min-height:70vh;min-height:70svh;display:flex;flex-direction:column;align-items:center;justify-content:center}
-  .final-ring{
-    width:150px;height:150px;border-radius:50%;margin-bottom:30px;
-    background:radial-gradient(circle at 35% 30%,#ffffff,#cfe4f3 70%);
-    display:flex;align-items:center;justify-content:center;
-    box-shadow:0 0 0 12px rgba(255,255,255,.45),0 22px 50px -16px rgba(46,90,127,.55);
-    animation:breathe 3s ease-in-out infinite;
-  }
-  .final-ring .heart-svg{width:60px;height:60px;fill:var(--pink)}
   #final h2{font-family:var(--script);font-size:clamp(2.6rem,10vw,4.6rem);color:#fff;text-shadow:0 6px 28px rgba(46,90,127,.35);margin-bottom:12px}
   #final .closing{font-weight:300;color:var(--ink);max-width:420px;margin:0 auto 34px}
   .sign-off{font-family:var(--script);font-size:1.9rem;color:var(--blue-900)}
@@ -401,7 +483,8 @@
   }
   @keyframes pulseLove{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:.85}}
 
-  /* ---------- floating controls ---------- */
+  /* [CSS 16] TOMBOL MENGAMBANG — tombol musik (kanan bawah) dan
+     tombol kembali ke atas. */
   .float-btn{
     position:fixed;z-index:50;width:52px;height:52px;border-radius:50%;
     border:none;cursor:pointer;background:rgba(46,90,127,.9);color:#fff;
@@ -416,7 +499,8 @@
   #scroll-top{right:20px;bottom:calc(84px + env(safe-area-inset-bottom));background:rgba(255,255,255,.85);color:var(--blue-700);display:none;border:1px solid rgba(122,160,195,.3)}
   #scroll-top.show{display:flex}
 
-  /* ---------- reveal ---------- */
+  /* [CSS 17] ANIMASI REVEAL — elemen muncul pelan-pelan saat discroll.
+     Dipakai otomatis lewat class "reveal". */
   .reveal{opacity:0;transform:translateY(34px);transition:opacity .8s ease,transform .8s cubic-bezier(.22,.61,.36,1)}
   .reveal.in{opacity:1;transform:translateY(0)}
   .reveal.zoom{transform:scale(.9)}
@@ -425,8 +509,10 @@
   .delay-2{transition-delay:.24s}
   .delay-3{transition-delay:.36s}
 
+  /* [CSS 18] FOOTER — teks paling bawah. Diubah di body [BODY 15]. */
   footer{text-align:center;padding:30px 22px calc(110px + env(safe-area-inset-bottom));color:var(--ink-soft);font-size:.75rem;letter-spacing:1px;position:relative;z-index:2}
 
+  /* [CSS 18b] PENGATURAN HP UMUM (lebar layar <= 600px) */
   @media (max-width:600px){
     section{padding:56px 16px 64px}
     .section-sub{margin-bottom:34px}
@@ -435,13 +521,12 @@
     .letter-paper::before{left:8px}
     .letter-paper::after{right:8px}
     .cake-stage{height:250px}
-    .candle-row{bottom:196px;width:auto;gap:16px}
-    .candle{width:22px;height:56px}
+    .candle-row{bottom:196px;width:auto;gap:12px}
+    .candle{width:15px;height:48px}
     .candle-row{justify-content:center}
-    .gallery-slide{padding:6px}
+    .gallery-slide{padding:26px 6px 6px}
     .polaroid{padding:10px 10px 14px}
     .gallery-nav{gap:14px}
-    .reasons-grid{gap:14px}
     .intro-kicker{margin-bottom:16px}
     .intro-name{margin-bottom:30px}
     .halo{font-size:.7rem;letter-spacing:3px}
@@ -450,12 +535,19 @@
     #music-toggle{right:14px}
     #scroll-top{right:14px}
   }
+  /* [CSS 18c] DUKUNGAN "KURANGI GERAKAN" dari sistem HP/PC */
   @media (prefers-reduced-motion:reduce){
     *{animation:none !important;transition:none !important}
     html{scroll-behavior:auto}
   }
 
-/* ===== SURAT: TAMPILAN APLIKASI + POPUP BUKU ===== */
+/* ================================================================
+   [CSS 19] KARTU "APLIKASI PESAN" + POPUP BUKU SURAT
+   ================================================================
+   Bagian ini mengatur tampilan kartu aplikasi (ikon amplop surat &
+   ikon galeri) dan popup berbentuk BUKU yang menampilkan surat.
+   Isi surat diubah di JS [JS 13]; struktur iklan di body [BODY 6].
+   ================================================================ */
   #letter-app,#gallery-app{
     display:flex;align-items:center;gap:16px;max-width:560px;margin:0 auto;
     background:rgba(255,255,255,.9);
@@ -527,7 +619,10 @@
   @keyframes lpFade{from{opacity:0}to{opacity:1}}
   #letter-popup.on .lp-book{animation:bookIn .55s cubic-bezier(.22,.61,.36,1) both}
 
-  /* ===== GALERI: POPUP ALA CHAT ===== */
+  /* ================================================================
+     [CSS 20] POPUP GALERI ALA-CHAT — popup putih ala aplikasi chat
+     untuk menggeser foto satu per satu. Logika di JS [JS 15].
+     ================================================================ */
   #photo-popup{
     position:fixed;inset:0;z-index:220;display:none;
     align-items:center;justify-content:center;padding:20px;
@@ -560,6 +655,14 @@
   #photo-popup .pp-name{color:var(--blue-900);font-weight:600;font-size:.95rem}
   #photo-popup .pp-status{color:var(--ink-soft);font-size:.72rem;font-weight:400;display:flex;align-items:center;gap:5px}
   #photo-popup .pp-online-dot{width:8px;height:8px;border-radius:50%;background:#7fd99a;display:inline-block}
+  #photo-popup .pp-close{
+    margin-left:auto;flex:none;width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(18,32,50,.06);color:var(--blue-900);
+    display:flex;align-items:center;justify-content:center;
+    transition:transform .2s ease,background .2s ease;
+  }
+  #photo-popup .pp-close:hover{background:rgba(233,127,156,.15);transform:scale(1.08)}
+  #photo-popup .pp-close svg{width:18px;height:18px;fill:currentColor}
   #photo-popup .pp-body{
     flex:1;min-height:0;overflow:hidden;
     display:flex;align-items:center;justify-content:center;
@@ -591,7 +694,11 @@
   @keyframes ppInR{0%{opacity:0;transform:translateX(72px) scale(.94) rotate(.6deg)}55%{opacity:1}100%{opacity:1;transform:none}}
   @keyframes ppInL{0%{opacity:0;transform:translateX(-72px) scale(.94) rotate(-.6deg)}55%{opacity:1}100%{opacity:1;transform:none}}
 
-/* ===== WEBSITE LOCK SYSTEM ===== */
+/* ================================================================
+   [CSS 21] LAYAR KUNCI — tampilan "Terkunci" dengan hitung mundur
+   sampai tanggal buka. Tanggal buka diatur di JS [KUNCI] (paling
+   bawah file); teks layar kunci di body [BODY 1].
+   ================================================================ */
 #site-lock{
  position:fixed;inset:0;z-index:9999;
  display:flex;align-items:center;justify-content:center;
@@ -682,7 +789,11 @@
 #site-lock .sub{font-size:.75rem;color:var(--ink-soft);font-weight:300;line-height:1.8}
 body.locked{overflow:hidden}
 
-/* ===== OPTIMASI KHUSUS SMARTPHONE ===== */
+/* ================================================================
+   [CSS 22] OPTIMASI HP (lebar <= 520px) & LAYAR PENDEK (landscape)
+   - Menyesuaikan ukuran surat/popup/kue/layar kunci di HP.
+   - Lanscape: popup galeri dibuat lebih ramping agar muat.
+   ================================================================ */
 @supports (min-height:100dvh){
   #hero{min-height:100dvh}
   #final{min-height:70dvh}
@@ -729,18 +840,17 @@ body.locked{overflow:hidden}
   #site-lock .cd-box{width:56px;padding:10px 4px 8px;border-radius:13px}
   #site-lock .cd-num{font-size:1.15rem}
   #site-lock .cd-lab{font-size:.5rem;letter-spacing:1.2px}
-  /* --- konten utama ukuran HP kecil --- */
+  /* --- [CSS 23] teks intro & judul saat HP kecil --- */
   .intro-kicker{letter-spacing:3px;font-size:.66rem}
   .intro-title{font-size:clamp(2.5rem,12vw,3.4rem)}
   .intro-name{font-size:clamp(1.9rem,8vw,2.6rem)}
   .tap-hint{font-size:.7rem;letter-spacing:2px;padding:11px 18px}
   .halo{letter-spacing:2px}
   .section-title{font-size:clamp(1.9rem,7vw,2.6rem)}
-  .reasons-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
-  .reason h4{font-size:.88rem}
   #final h2{font-size:clamp(2.3rem,10vw,3.4rem)}
 }
 @media (max-width:360px){
+  /* [CSS 23b] HP SUPER KECIL (lebar <= 360px) */
   #site-lock .cd-box{width:50px}
   #site-lock .cd-num{font-size:1.05rem}
   #site-lock .lock-box{padding:22px 14px 26px}
@@ -756,12 +866,160 @@ body.locked{overflow:hidden}
   #photo-popup .pp-frame{width:min(190px,100%)}
 }
 
+/* ================================================================
+   [CSS 24] BAR BACAAN + JUDUL MINI — garis progres di atas layar dan
+   label kecil yang ikut scroll. Teks label di body [BODY 14].
+   ================================================================ */
+#read-bar{position:fixed;top:0;left:0;right:0;height:4px;z-index:400;background:rgba(255,255,255,.35)}
+#read-progress{display:block;height:100%;width:0;background:linear-gradient(90deg,#7fa8cc,#e97f9c);border-radius:0 999px 999px 0}
+#read-title{
+  position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:399;
+  font-family:var(--script);font-size:1.05rem;color:var(--blue-900);
+  background:rgba(255,255,255,.9);padding:5px 16px;border-radius:999px;white-space:nowrap;
+  box-shadow:0 8px 18px -8px rgba(46,90,127,.35);border:1px solid rgba(255,255,255,.9);
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .3s ease,visibility .3s ease;
+}
+#read-title.show{opacity:1;visibility:visible}
+
+/* ================================================================
+   [CSS 25] AMPLOP + SEGEL LILIN — ikon surat dibuat menyerupai
+   amplop dengan segel lilin. Saat diklik segel "pecah".
+   Logikanya di JS [JS 13] (fungsi breakSeal).
+   ================================================================ */
+#letter-app .app-icon{background:linear-gradient(160deg,#f3edf9,#e0d8f0)}
+#letter-app .app-icon svg{display:none}
+.env-wrap{display:block}
+.env{position:relative;width:62px;height:46px;perspective:600px}
+.env-body{position:absolute;inset:0;background:linear-gradient(160deg,#fffdfb,#efe7f8);border:1px solid rgba(122,160,195,.4);border-radius:7px;z-index:0;box-shadow:inset 0 -8px 14px rgba(122,160,195,.14)}
+.env-flap{
+  position:absolute;top:0;left:50%;width:0;height:0;z-index:1;
+  border-left:31px solid transparent;border-right:31px solid transparent;border-top:20px solid #e2d7f1;
+  transform:translateX(-50%);transform-origin:top center;
+  transition:transform .5s cubic-bezier(.22,.61,.36,1);
+}
+.env.breaking .env-flap{transform:translateX(-50%) rotateX(180deg)}
+.seal{
+  position:absolute;left:50%;bottom:3px;z-index:3;
+  transform:translateX(-50%);
+  width:22px;height:22px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#ffc9d8,#e97f9c 55%,#bf5d7c);
+  box-shadow:0 3px 8px rgba(46,90,127,.4),inset 0 -3px 6px rgba(160,70,100,.45);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .35s ease,opacity .35s ease;
+}
+.seal::after{content:"";width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.6)}
+.env.breaking .seal{transform:translateX(-50%) scale(1.7);opacity:0}
+.wax-shard{position:absolute;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:4;animation:burstFly .55s ease-out forwards}
+
+/* ================================================================
+   [CSS 26] WHATSAPP — kartu WhatsApp di atas footer + popup berbentuk
+   buku untuk menulis & mengirim pesan. Nomor tujuan diubah di
+   JS [JS 14] (var WA_NUMBER).
+   ================================================================ */
+#wa-section .card{max-width:560px;margin:0 auto}
+#wa-app{
+  display:flex;align-items:center;gap:16px;
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(255,255,255,.95);
+  border-radius:20px;
+  box-shadow:0 14px 30px -16px rgba(46,90,127,.4);
+  padding:18px;cursor:pointer;
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+#wa-app:hover{transform:translateY(-3px);box-shadow:0 20px 40px -18px rgba(46,90,127,.5)}
+#wa-app:active{transform:scale(.97)}
+#wa-app .wa-icon{
+  position:relative;width:62px;height:62px;border-radius:40%;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#2ddb63,#128c7e);
+  box-shadow:0 10px 20px -8px rgba(18,140,126,.55);
+}
+#wa-app .wa-icon svg{width:32px;height:32px;fill:#fff}
+#wa-app .wa-meta{display:flex;flex-direction:column;gap:3px;min-width:0}
+#wa-app .wa-name{font-weight:600;font-size:.82rem;color:var(--blue-900);letter-spacing:.5px}
+#wa-app .wa-title{font-family:var(--script);font-size:1.5rem;color:var(--pink);line-height:1.1}
+#wa-app .wa-prev{font-size:.75rem;color:var(--ink-soft);font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+#wa-popup{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
+#wa-popup.on{display:flex}
+#wa-popup .wa-backdrop{position:absolute;inset:0;background:rgba(46,90,127,.45);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);animation:lpFade .4s ease both}
+#wa-popup .wa-book{
+  position:relative;width:min(600px,94vw);max-height:88vh;overflow-y:auto;overscroll-behavior:contain;
+  background:linear-gradient(180deg,#fffdf6 0%,#fdf4e4 100%);
+  border:1px solid #eadfc9;border-radius:16px;
+  box-shadow:0 44px 90px -32px rgba(30,45,62,.65),0 0 0 12px rgba(255,255,255,.14);
+  padding:30px 32px 34px;
+}
+#wa-popup .wa-book::before{content:"";position:absolute;top:0;bottom:0;left:10px;width:3px;background:linear-gradient(180deg,transparent,rgba(199,178,140,.5),transparent)}
+#wa-popup .wa-book::after{content:"";position:absolute;top:0;bottom:0;right:10px;width:3px;background:linear-gradient(180deg,transparent,rgba(199,178,140,.55),transparent)}
+#wa-popup .wa-close{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;background:rgba(255,255,255,.92);box-shadow:0 8px 18px -8px rgba(46,90,127,.5);display:flex;align-items:center;justify-content:center;color:var(--blue-700);transition:transform .2s ease}
+#wa-popup .wa-close:hover{transform:rotate(90deg)}
+#wa-popup .wa-close svg{width:17px;height:17px;fill:currentColor}
+#wa-popup.on .wa-book{animation:bookIn .55s cubic-bezier(.22,.61,.36,1) both}
+#wa-popup .wa-head{display:flex;align-items:center;gap:12px;justify-content:center;margin:2px 0 16px}
+#wa-popup .wa-head .wa-headie{font-family:var(--script);font-size:1.7rem;color:var(--pink);line-height:1}
+#wa-popup .wa-talk{font-family:var(--script);font-size:1.3rem;color:var(--blue-700);text-align:center;margin-bottom:8px}
+#wa-popup .wa-box{
+  background-image:linear-gradient(rgba(166,138,72,.08) 1px,transparent 1px);
+  background-size:100% 32px;padding:6px 4px;min-height:210px;
+}
+#wa-popup .wa-input{
+  width:100%;min-height:170px;background:transparent;border:none;outline:none;resize:vertical;
+  font-family:var(--sans);font-weight:400;font-size:.95rem;line-height:32px;color:var(--blue-900);
+}
+#wa-popup .chat-send{
+  display:flex;align-items:center;justify-content:center;gap:10px;margin:18px auto 0;border:none;cursor:pointer;
+  font-family:var(--sans);font-weight:600;font-size:.86rem;letter-spacing:2px;text-transform:uppercase;
+  color:#fff;background:linear-gradient(135deg,#25d366,#128c7e);
+  padding:15px 30px;border-radius:999px;
+  box-shadow:0 16px 30px -12px rgba(37,211,102,.6);
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+#wa-popup .chat-send:hover{transform:scale(1.05);box-shadow:0 22px 36px -12px rgba(37,211,102,.7)}
+#wa-popup .chat-send svg{width:18px;height:18px;fill:#fff}
+#wa-popup .wa-empty{text-align:center;font-size:.74rem;color:var(--pink);min-height:18px;margin-top:10px}
+@media (max-width:600px){
+  #wa-popup .wa-book{padding:22px 18px 26px}
+  #wa-popup .wa-close{top:10px;right:10px;width:36px;height:36px}
+}
+
+/* ================================================================
+   [CSS 27] MODE HEMAT (HP LEMAH) — otomatis mematikan animasi berat
+   (blur, kilau, dll) bila HP/PC terdeteksi lemah oleh JS [JS 1].
+   ================================================================ */
+html.lite *,html.lite *::before,html.lite *::after{backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
+html.lite .intro-glow{filter:none}
+html.lite .intro-heart-f,.lite .bunt-flag,.lite .bunt-knot{animation:none}
+html.lite .balloon{animation:none}
+html.lite .heart,.lite .balloon-up{animation-duration:999s}
+
 </style>
 </head>
 <body>
 
-<!-- ============ LAYAR KUNCI ============ -->
-<!-- Ubah teks pesan & tanggal buka di bagian ini sesuai keinginan -->
+<!-- ================================================================
+     PETA KELOMPOK BODY/HTML  (cari penanda [BODY 1] s.d. [BODY 15])
+     ================================================================
+     Di bagian inilah semua TEKS yang tampil di halaman diubah.
+     [BODY  1] Layar kunci           [BODY  2] Lapisan hiasan latar
+     [BODY  3] Intro (layar pembuka) [BODY  4] Hero (judul atas)
+     [BODY  5] Galeri foto           [BODY  6] Surat
+     [BODY  7] Kue ulang tahun       [BODY  8] Penutup
+     [BODY  9] WhatsApp              [BODY 10] Popup galeri
+     [BODY 11] Popup buku surat      [BODY 12] Popup WhatsApp
+     [BODY 13] Musiek & tombol       [BODY 14] Bar bacaan + judul
+     [BODY 15] Footer
+     ================================================================ -->
+
+
+<!-- ================================================================
+     [BODY 1] LAYAR KUNCI — teks yang tampil sebelum website terbuka.
+     EDIT: ganti kata "Terkunci Sementara", pesan "Mohon bersabar...",
+     dan tanggal yang DITAMPILKAN di kartu.
+     INGAT: tanggal BUKA yang sebenarnya diubah di JS [KUNCI]
+     (paling bawah file) pada var UNLOCK_DATE.
+     ================================================================ -->
 <div id="site-lock" role="dialog" aria-modal="true" aria-label="Website terkunci">
   <div class="lock-glow lg-1"></div>
   <div class="lock-glow lg-2"></div>
@@ -770,7 +1028,7 @@ body.locked{overflow:hidden}
     <div class="lock-badge">
       <svg class="lock-icon" viewBox="0 0 24 24"><defs><linearGradient id="lockGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8fbce0"/><stop offset="100%" stop-color="#e97f9c"/></linearGradient></defs><path fill="url(#lockGrad)" d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm-3 8V6a3 3 0 0 1 6 0v3H9zm3 4a1.5 1.5 0 0 1 1 2.6V17a1 1 0 0 1-2 0v-1.4a1.5 1.5 0 0 1 1-2.6z"/></svg>
     </div>
-    <p class="lock-kicker">Untuk Keyshaa</p>
+    <p class="lock-kicker">Keyshaa</p>
     <br>
     <h1>Terkunci Sementara</h1>
     <p class="lock-msg">Mohon bersabar yahh cantikk, web kamu akan terbuka sendiri kok.</p>
@@ -799,6 +1057,9 @@ body.locked{overflow:hidden}
   </div>
 </div>
 
+<!-- [BODY 2] LAPISAN HIASAN LATAR: hati melayang, balon, bunting,
+     konfeti. Semua otomatis — tidak perlu diubah kecuali mau
+     menghapus salah satunya. -->
 <div id="hearts-layer"></div>
 <div id="balloons-layer"></div>
 <div id="balloon-deco" aria-hidden="true">
@@ -825,6 +1086,12 @@ body.locked{overflow:hidden}
 </div>
 <canvas id="confetti-canvas"></canvas>
 
+<!-- ================================================================
+     [BODY 3] LAYAR INTRO — tampilan pertama kali dibuka.
+     EDIT: teks "TOLONG DI BACA DENGAN TELITI...", nama "For Keyshaa",
+     dan tulisan tombol hati. Nama utama juga diubah di JS [JS 2]
+     (var NAME).
+     ================================================================ -->
 <div id="intro">
   <div class="intro-glow g1"></div>
   <div class="intro-glow g2"></div>
@@ -856,7 +1123,11 @@ body.locked{overflow:hidden}
 </div>
 
 <main>
-  <!-- ================= HERO ================= -->
+  <!-- ================================================================
+       [BODY 4] HERO — bagian paling atas halaman.
+       EDIT: judul "Selamat Ulang Tahun", nama, & petunjuk scroll.
+       Kalimat yang mengetik sendiri ada di JS [JS 11] (var phrases).
+       ================================================================ -->
   <section id="hero">
     <p class="halo">Untuk wanita cantik dalam hidupku</p>
     <h1>Selamat Ulang Tahun.🥳💐</h1>
@@ -869,11 +1140,15 @@ body.locked{overflow:hidden}
     </div>
   </section>
 
-  <!-- ================= GALLERY ================= -->
+  <!-- ================================================================
+       [BODY 5] GALERI FOTO — kartu pesan + album foto.
+       EDIT: teks keterangan di bawah judul. Daftar & jumlah fotonya
+       diubah di JS [JS 2] (var PHOTOS).
+       ================================================================ -->
   <section id="gallery">
     <p class="section-label reveal">Beberapa Foto Kamu</p>
     <h2 class="section-title reveal">Album Terindah Tentang Kamu</h2>
-    <p class="section-sub reveal">Kita memang belum ada kesempatan untuk foto bareng sihh, Tapi aku pake foto kamu aja yah hehe😁, semoga suatu saat ada rezeki dan waktu untuk kita bertemu yah cantik🤩, Aku yakin jika memang kamu tujuan ku walaupun beribu-ribu kilo meter jarak kita pasti akan aku tempuh sampai benar-benar aku menemukanmu hehehe...<br> INILAH BEBERAPA FOTO FAVORIT AKUU... btw geser fotonya yahh💐</p>
+    <p class="section-sub reveal">Kita memang belum ada kesempatan untuk foto bareng sihh, Tapi aku pake foto kamu aja yah hehe😁, semoga suatu saat ada rezeki dan waktu untuk kita bertemu yah cantik🤩, Aku yakin jika memang kamu tujuan ku walaupun beribu-ribu kilo meter jarak kita pasti akan aku tempuh sampai benar-benar aku menemukanmu hehehe...<br> INILAH BEBERAPA FOTO FAVORIT AKUU...💐</p>
 
     <!-- Kartu 'pesan dari Zydan' (terbuka dulu) -->
     <div class="card gallery-card reveal" id="gallery-app-card">
@@ -885,7 +1160,7 @@ body.locked{overflow:hidden}
         <div class="app-meta">
           <span class="app-from">Zydan</span>
           <span class="app-title">untuk keyshaa</span>
-          <span class="app-prev">7 Foto Belum Di Buka..</span>
+          <span class="app-prev">9 pesan belum di baca</span>
         </div>
       </div>
       <button class="app-open" id="gallery-open-btn">Buka Galeri Foto</button>
@@ -911,7 +1186,11 @@ body.locked{overflow:hidden}
     </div>
   </section>
 
-  <!-- ================= LETTER ================= -->
+  <!-- ================================================================
+       [BODY 6] SURAT — kartu "aplikasi pesan" + surat lengkap.
+       Teks surat diubah di JS [JS 13] (var letterLines);
+       tampilan permukaan di CSS [CSS 19] & [CSS 25].
+       ================================================================ -->
   <section id="letter">
     <p class="section-label reveal">Surat Untukmu</p>
     <h2 class="section-title reveal">Dari Lubuk Hatiku yang Paling Dalam</h2>
@@ -920,14 +1199,18 @@ body.locked{overflow:hidden}
     <div class="card letter-body reveal">
       <!-- Tampilan "aplikasi pesan" -->
       <div class="letter-app" id="letter-app" role="button" tabindex="0" aria-label="Buka surat">
-        <div class="app-icon">
-          <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <div class="app-icon env-wrap">
+          <div class="env">
+            <div class="env-body"></div>
+            <div class="env-flap"></div>
+            <span class="seal"></span>
+          </div>
           <span class="app-dot"></span>
         </div>
         <div class="app-meta">
           <span class="app-from">Zydan</span>
           <span class="app-title">Surat untuk Keyshaa</span>
-          <span class="app-prev">Ketuk untuk membuka suratnya yah sayang...</span>
+          <span class="app-prev">Ketuk untuk membuka pesan dari aku yah sayang...</span>
         </div>
       </div>
       <button class="app-open" id="letter-open-btn">Buka Surat</button>
@@ -943,15 +1226,11 @@ body.locked{overflow:hidden}
     </div>
   </section>
 
-  <!-- ================= REASONS ================= -->
-  <section id="reasons">
-    <p class="section-label reveal">Beda Cerita Beda Rasa</p>
-    <h2 class="section-title reveal">Alasan Aku Mencintaimu</h2>
-    <p class="section-sub reveal">setiap hal kecil tentangmu seperti tertawamu selalu buat aku ikut tersenyum dan merasakan kebahagiaan itu.</p>
-    <div class="reasons-grid" id="reasons-grid"></div>
-  </section>
-
-  <!-- ================= CAKE ================= -->
+  <!-- ================================================================
+       [BODY 7] KUE ULANG TAHUN — lilin yang ditiup/diketuk satu per satu.
+       EDIT: jumlah & warna lilin di baris <button class="candle"...>.
+       Teks petunjuk di <p id="cake-hint">.
+       ================================================================ -->
   <section id="cake-section">
     <p class="section-label reveal">Saatnya Berdoa atas Harapanmu</p>
     <h2 class="section-title reveal">Tiup atau Ketuk Lilinnya yah, Sayang</h2>
@@ -959,13 +1238,17 @@ body.locked{overflow:hidden}
 
     <div class="card reveal">
       <div class="cake-stage">
+        <div id="cake-balloons" aria-hidden="true"></div>
         <div class="cake" aria-hidden="true">
           <div class="layer top">
             <div class="icing"></div>
             <div class="tip"></div>
           </div>
           <div class="layer mid"><div class="icing"></div></div>
-          <div class="layer tall"><div class="icing"></div></div>
+          <div class="layer tall">
+            <div class="icing"></div>
+            <svg class="cake-heart" viewBox="0 0 24 24"><path fill="#ffffff" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </div>
           <div class="plate"></div>
         </div>
         <div class="candle-row" id="candle-row">
@@ -984,19 +1267,43 @@ body.locked{overflow:hidden}
     </div>
   </section>
 
-  <!-- ================= FINAL ================= -->
+  <!-- ================================================================
+       [BODY 8] PENUTUP — ring hati + kalimat penutup.
+       EDIT: semua teks penutup ada di sini.
+       ================================================================ -->
   <section id="final">
-    <div class="final-ring reveal zoom">
-      <svg class="heart-svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-    </div>
     <h2 class="reveal">Pesan Singkat Untuk Keysha</h2>
     <p class="closing reveal">selamat bertambah usia untuk wanita cantikku. Terima kasih sudah bertahan melewati hari-hari yang tidak selalu mudah. Mungkin masih banyak mimpi yang belum tercapai, banyak kesalahan yang harus diperbaiki, dan banyak jalan yang harus dilalui. Tapi aku percaya, selama aku tidak berhenti melangkah, cerita terbaikku masih akan datang.</p>
     <p class="sign-off reveal">Bahagia selalu, cantik.</p>
     <p class="big-love reveal">Happy Birthday Beb, <br>I Always look Forward To Your Happiness</p>
   </section>
+
+  <!-- ================================================================
+       [BODY 9] WHATSAPP — kartu kirim balasan di atas footer.
+       EDIT: teks nama & judul kartu. NOMOR TUJUAN diubah di
+       JS [JS 14] (var WA_NUMBER).
+       ================================================================ -->
+  <section id="wa-section">
+    <div class="card reveal" id="wa-card">
+      <div id="wa-app" role="button" tabindex="0" aria-label="Kirim pesan WhatsApp">
+        <div class="wa-icon">
+          <svg viewBox="0 0 24 24"><path d="M12.04 2C6.53 2 2.06 6.48 2.06 12c0 1.76.46 3.43 1.34 4.92L2 22l5.23-1.36c1.43.78 3.05 1.2 4.81 1.2 5.51 0 9.98-4.48 9.98-10 0-2.67-1.04-5.18-2.93-7.06A9.94 9.94 0 0 0 12.04 2zm5.93 14.21c-.25.7-1.44 1.33-2.03 1.42-.52.08-1.17.11-1.89-.16a16 16 0 0 1-1.34-.5c-2.6-1.12-4.29-3.72-4.42-3.9-.13-.17-1.04-1.38-1.04-2.64 0-1.25.66-1.87.9-2.13.14-.15.4-.32.63-.32h.48c.24-.03.48.05.69.55.27.61.9 2.14.98 2.29.08.15.13.33.04.54-.09.2-.13.33-.26.51l-.39.46c-.13.13-.27.27-.12.53.15.26.65 1.08 1.4 1.75.96.84 1.77 1.1 2.03 1.23.25.12.4.1.55-.06l.82-.95c.27-.32.47-.27.8-.16.33.11 2.06.97 2.42 1.15.35.18.59.27.67.42.09.15.09.67-.15 1.37z"/></svg>
+          <span class="app-dot"></span>
+        </div>
+        <div class="wa-meta">
+          <span class="wa-name">WhatsApp</span>
+          <span class="wa-title">Kirim pesan untuk zydan</span>
+          <span class="wa-prev">tulis permintaanmu ke aku disini yah, sayang..</span>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
-<!-- Popup galeri foto (putih polos) -->
+<!-- ================================================================
+     [BODY 10] POPUP GALERI — muncul saat kartu galeri diklik.
+     Isi fotonya otomatis dari JS [JS 2]. Tidak perlu diubah form-nya.
+     ================================================================ -->
 <div id="photo-popup" role="dialog" aria-modal="true" aria-label="Album foto dari Zydan">
   <div class="pp-backdrop" id="pp-backdrop"></div>
   <div class="pp-chat">
@@ -1008,6 +1315,9 @@ body.locked{overflow:hidden}
         <span class="pp-name">Zydan</span>
         <span class="pp-status"><span class="pp-online-dot"></span>online</span>
       </div>
+      <button class="pp-close" id="pp-close-btn" aria-label="Tutup album">
+        <svg viewBox="0 0 24 24"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7l-1.4-1.4 6.3-6.3-6.3-6.3 1.4-1.4 6.3 6.3 6.3-6.3 1.4 1.4z"/></svg>
+      </button>
     </div>
     <div class="pp-body">
       <div class="pp-frame" id="pp-frame">
@@ -1021,7 +1331,10 @@ body.locked{overflow:hidden}
   </div>
 </div>
 
-<!-- Popup surat bergaya buku -->
+<!-- ================================================================
+     [BODY 11] POPUP BUKU SURAT — muncul saat amplop surat dibuka.
+     Isi suratnya dari JS [JS 13]. Tidak perlu diubah form-nya.
+     ================================================================ -->
 <div id="letter-popup" role="dialog" aria-modal="true" aria-label="Surat untuk Keyshaa">
   <div class="lp-backdrop" id="letter-popup-backdrop"></div>
   <div class="lp-book">
@@ -1034,7 +1347,37 @@ body.locked{overflow:hidden}
   </div>
 </div>
 
-<audio id="bgm" loop preload="auto"
+<!-- ================================================================
+     [BODY 12] POPUP WHATSAPP — buku berisi kolom tulis pesan &
+     tombol kirim. Teks tombol bisa diubah di sini.
+     ================================================================ -->
+<div id="wa-popup" role="dialog" aria-modal="true" aria-label="Balas pesan via WhatsApp">
+  <div class="wa-backdrop" id="wa-popup-backdrop"></div>
+  <div class="wa-book">
+    <button class="wa-close" id="wa-close-btn" aria-label="Tutup">
+      <svg viewBox="0 0 24 24"><path d="M18.3 5.71L12 12l-6.3-6.29-1.4 1.42L10.6 13.41l-6.3 6.3 1.4 1.4L12 14.83l6.3 6.3 1.4-1.42-6.29-6.29 6.29-6.3z"/></svg>
+    </button>
+    <div class="wa-head">
+      <span class="wa-headie">Kirim pesan untuk akuu cantik</span>
+    </div>
+    <p class="wa-talk">tulislah sesuatu untukku ya, sayang</p>
+    <div class="wa-box">
+      <textarea class="wa-input" id="wa-input" rows="6" maxlength="1000" placeholder="Tulis pesanmu di sini..."></textarea>
+    </div>
+    <p class="wa-empty" id="wa-empty"></p>
+    <button class="chat-send" id="wa-send-btn">
+      <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+      Kirim
+    </button>
+  </div>
+</div>
+
+<!-- ================================================================
+     [BODY 13] MUSIK LATAR — ganti link lagu pada atribut src di bawah.
+     (preload="none" = lagu baru dimuat saat tombol musik ditekan.)
+     Tombol musik & panah atas mengikuti di bawahnya.
+     ================================================================ -->
+<audio id="bgm" loop preload="none"
   src="https://zyraaatod.github.io/bahan-bahan/payphone.MP3"></audio>
 
 <button class="float-btn" id="music-toggle" aria-label="Putar musik">
@@ -1045,20 +1388,51 @@ body.locked{overflow:hidden}
   <svg viewBox="0 0 24 24"><path d="M12 8l-6 6h12l-6-6z"/></svg>
 </button>
 
+<!-- [BODY 14] BAR BACAAN + JUDUL MINI — garis progres atas. Teks label
+     kecil (ganti "Untuk Keyshaa") diubah di baris berikutnya. -->
+<div id="read-bar"><span id="read-progress"></span></div>
+<div id="read-title">Keyshaa 🎀</div>
+
+<!-- [BODY 15] FOOTER — teks paling bawah. EDIT di sini. -->
 <footer>pesan ini saya buat khusus untuk Keyshaa. <br> &nbsp;Happy Birthday Cantik</footer>
 
 <script>
 (function(){
   "use strict";
 
+  /* ================================================================
+     PETA KELOMPOK JS  (cari penanda [JS 1] s.d. [JS 21] di bawah)
+     ================================================================
+     [JS  1] Deteksi HP lemah        [JS  2] >>> EDIT: konten utama
+     [JS  3] Alat bantu              [JS  4] Layar intro (tombol hati)
+     [JS  5] Balon intro             [JS  6] Hati di bg intro
+     [JS  7] Hati melayang           [JS  8] Balon utama
+     [JS  9] Bunting                 [JS 10] Konfeti
+     [JS 11] Efek mengetik           [JS 12] Galeri penuh (slider)
+     [JS 13] Surat (isi+amplop+buku) [JS 14] WhatsApp
+     [JS 15] Popup galeri ala-chat   [JS 16] Lilin
+     [JS 17] Musik                   [JS 18] Scroll-top & reveal
+     [JS 19] Peluncuran awal hiasan  [JS 20] Bar bacaan
+     [JS 21] Titik akhir script
+     ================================================================ */
+
+  /* ================================================================
+     [JS 1] DETEKSI HP LEMAH — aktifkan mode hemat otomatis.
+     Ingin SELALU full animasi? Ganti semua menjadi: var LITE = false;
+     ================================================================ */
   /* Mode hemat untuk HP lemah / hemat baterai */
-  var LITE = (window.innerWidth <= 390) ||
-    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+  var LITE = (window.innerWidth <= 360) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4 && window.innerWidth <= 768) ||
     (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
     (typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   if(LITE) document.documentElement.className += " lite";
 
-  /* ============ EDIT DI SINI ============ */
+  /* ================================================================
+     [JS 2] >>> EDIT DI SINI — isi konten utama website <<<
+     ================================================================
+     - NAME   : nama yang tampil di layar hero (judul atas)
+     - PHOTOS : daftar LINK foto galeri (satu baris satu foto)
+     ================================================================ */
   var NAME = "Keyshaa";
   /* Foto untuk galeri. Isi dengan link foto kalian sendiri untuk menggantikan contoh ini.
      Contoh di bawah hanya sebagai sampel (foto romantis via URL). */
@@ -1069,11 +1443,13 @@ body.locked{overflow:hidden}
     "https://zyraaatod.github.io/bahan-bahan/4.jpg",
     "https://zyraaatod.github.io/bahan-bahan/5.jpg",
     "https://zyraaatod.github.io/bahan-bahan/6.jpg",
-    "https://zyraaatod.github.io/bahan-bahan/7.jpg"
+    "https://zyraaatod.github.io/bahan-bahan/7.jpg",
+    "https://zyraaatod.github.io/bahan-bahan/8.jpg",
+    "https://zyraaatod.github.io/bahan-bahan/9.jpeg"
   ];
-  var CAPTIONS = ["Foto Imut-nya", "Foto Anggun-nya", "Foto Cantik-nya", "Foto Lucu-nya", "Foto Cemberut-nya", "Foto Tenang-nya", "Foto Tengil-nya"];
   /* ====================================== */
 
+  /* [JS 3] ALAT BANTU — fungsi pendek (jangan diubah kecuali paham) */
   var $ = function(s){ return document.querySelector(s); };
   var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
   var HEART_SVG = '<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
@@ -1101,7 +1477,10 @@ body.locked{overflow:hidden}
       '</svg>';
   }
 
-  /* ---------- intro ---------- */
+  /* ================================================================
+     [JS 4] LAYAR INTRO — logika tombol hati (sentuh = masuk ke halaman).
+     Teks intro ada di body [BODY 3]; balonnya di [JS 5].
+     ================================================================ */
   var intro = $("#intro");
   var started = false;
   function enter(){
@@ -1120,7 +1499,7 @@ body.locked{overflow:hidden}
   openBtn.addEventListener("click", enter);
   intro.addEventListener("click", enter);
 
-  /* sparkle stars around the heart */
+  /* [JS 4b] BINTANG KILAU di sekitar tombol hati */
   var sparkLayer = $("#intro-sparks");
   for(var si=0; si<18; si++){
     var sp = document.createElement("div");
@@ -1136,11 +1515,12 @@ body.locked{overflow:hidden}
     sparkLayer.appendChild(sp);
   }
 
-  /* ---------- intro balloons: pop saat hati disentuh ---------- */
+  /* [JS 5] BALON INTRO — dibuat dan meletus saat intro dibuka.
+     Jumlah otomatis lebih sedikit di mode hemat (LITE). */
   var balloonLayer = $("#intro-balloons");
   var balloonEls = [];
   function buildBalloons(){
-    var n = 9;
+    var n = LITE ? 6 : 9;
     var vw = window.innerWidth, vh = window.innerHeight;
     var cx = vw/2, cy = vh/2;
     for(var i=0;i<n;i++){
@@ -1188,9 +1568,9 @@ body.locked{overflow:hidden}
   }
   buildBalloons();
 
-  /* floating hearts in intro background */
+  /* [JS 6] HATI KECIL di latar layar intro */
   var introFloatLayer = document.createElement("div");
-  for(var fi=0; fi<14; fi++){
+  for(var fi=0; fi<(LITE?6:14); fi++){
     var fh = document.createElement("div");
     fh.className = "intro-heart-f";
     fh.innerHTML = HEART_SVG;
@@ -1209,9 +1589,10 @@ body.locked{overflow:hidden}
   }
   openBtn.addEventListener("pointerdown", pumpBtn);
 
-  /* ---------- floating hearts ---------- */
+  /* [JS 7] HATI MELAYANG di halaman utama.
+     EDIT: ubah var maxHearts untuk jumlah hati. */
   var heartsLayer = $("#hearts-layer");
-  var maxHearts = 28;
+  var maxHearts = LITE ? 12 : 28;
   function generateHearts(){
     for(var i=0;i<maxHearts;i++){
       (function(i){
@@ -1241,7 +1622,8 @@ body.locked{overflow:hidden}
     }
   }
 
-  /* ---------- balloons di halaman utama ---------- */
+  /* [JS 8] BALON DI HALAMAN UTAMA — balon besar yang naik-ke-atas terus.
+     Jumlah awal diatur di [JS 19]. */
   var balloonsLayer = document.getElementById("balloons-layer");
   function spawnMainBalloon(loop){
     var cols = BALLOON_COLORS[Math.floor(Math.random()*BALLOON_COLORS.length)];
@@ -1265,7 +1647,33 @@ body.locked{overflow:hidden}
     }
   }
 
-  /* ---------- bunting: hiasan gantung di atas ---------- */
+  /* balon dekoratif di belakang kue ulang tahun */
+  function buildCakeBalloons(){
+    var wrap = document.getElementById("cake-balloons");
+    if(!wrap) return;
+    var slots = [
+      {l:"0%", b:"34px", w:"58px", d:"0s"},
+      {l:"7%", b:"104px", w:"38px", d:"1.4s"},
+      {l:"82%", b:"40px", w:"48px", d:".7s"},
+      {l:"89%", b:"118px", w:"32px", d:"1.9s"},
+      {l:"42%", b:"224px", w:"30px", d:".9s"}
+    ];
+    for(var i=0;i<slots.length;i++){
+      var cols = BALLOON_COLORS[i % BALLOON_COLORS.length];
+      var s = slots[i];
+      var b = document.createElement("div");
+      b.className = "cb";
+      b.innerHTML = balSvg(cols[0], cols[1]);
+      b.style.left = s.l;
+      b.style.bottom = s.b;
+      b.style.width = s.w;
+      b.style.height = Math.round(parseFloat(s.w)*110/60)+"px";
+      b.style.animationDelay = s.d;
+      wrap.appendChild(b);
+    }
+  }
+
+  /* [JS 9] BUNTING — hiasan gantung di atas layar, dibuat otomatis */
   var buntFlagColors = ["#e97f9c","#7fa8cc","#f4c56d","#a9dcc7","#c9a7e0","#f2b6c4","#a9cfe8"];
   function buildBunting(){
     var bunt = document.getElementById("bunting");
@@ -1278,6 +1686,7 @@ body.locked{overflow:hidden}
       '<path d="M0 6 Q50 20 100 6" stroke="#b9cfe4" stroke-width="2.5" fill="none"/></svg>';
     bunt.appendChild(line);
     var n = Math.max(7, Math.min(16, Math.round(w/72)));
+    if(LITE) n = Math.min(n, 8);
     for(var i=0;i<n;i++){
       var t = n === 1 ? 0.5 : i/(n-1);
       var x = t * w;
@@ -1307,7 +1716,8 @@ body.locked{overflow:hidden}
   }
   window.addEventListener("resize", buildBunting);
 
-  /* ---------- confetti ---------- */
+  /* [JS 10] KONFETI — fungsi burstConfetti(). Dipanggil saat masuk,
+     saat lilin padam, dan sebagainya. */
   var canvas = $("#confetti-canvas");
   var ctx = canvas.getContext("2d");
   var w, h;
@@ -1321,7 +1731,7 @@ body.locked{overflow:hidden}
   var rainbow = ["#b3d3ea","#f2b6c4","#f2c078","#a9dcc7","#c9a7e0","#ffffff"];
 
   function burstConfetti(dur){
-    var count = 120, total = dur || 1600, start = performance.now();
+    var count = LITE ? 50 : 120, total = dur || 1600, start = performance.now();
     for(var i=0;i<count;i++){
       confettiPieces.push({
         x:w/2 + (Math.random()-0.5)*120,
@@ -1365,7 +1775,10 @@ body.locked{overflow:hidden}
     if(confettiPieces.length>0) requestAnimationFrame(renderA);
   }
 
-  /* ---------- typing ---------- */
+  /* ================================================================
+     [JS 11] EFEK MENGETIK — kalimat yang mengetik sendiri di bagian
+     atas (hero). GANTI KALIMAT dengan mengubah var phrases di bawah.
+     ================================================================ */
   var typedEl = $("#typed-text");
   var phrases = [
     "Pagi ini bidadari turun ke dunia, namanya Keysha, cantik bercahaya.",
@@ -1379,13 +1792,12 @@ body.locked{overflow:hidden}
   function startTyping(){ typeTick(); }
   function typeTick(){
     var target = curPhrase;
+    var chars = Array.from(target);
     if(!deleting){
       ci++;
-      typedEl.innerHTML = target.slice(0,ci) + "<b>" + (ci<target.length?"|":"") + "</b>";
-      if(ci>=target.length){
+      typedEl.innerHTML = chars.slice(0,ci).join("") + "<b>" + (ci<chars.length?"|":"") + "</b>";
+      if(ci>=chars.length){
         setTimeout(function(){
-          curPhrase = phrases[++pi % phrases.length];
-          if(pi>=phrases.length) pi=1;
           deleting=true;
           typeTick();
         }, 2200);
@@ -1393,11 +1805,11 @@ body.locked{overflow:hidden}
       }
     } else {
       ci--;
-      curPhrase = curPhrase;
-      typedEl.innerHTML = target.slice(0,ci);
+      typedEl.innerHTML = chars.slice(0,ci).join("");
       if(ci<=0){
         deleting=false;
         ci=0;
+        pi = (pi+1) % phrases.length;
         curPhrase = phrases[pi];
         typeTick();
         return;
@@ -1406,7 +1818,8 @@ body.locked{overflow:hidden}
     setTimeout(typeTick, deleting?38:82);
   }
 
-  /* ---------- gallery ---------- */
+  /* [JS 12] GALERI PENUH (SLIDER) — membuat slide foto + navigasi panah
+     dan geser. Sumber fotonya dari [JS 2] (var PHOTOS). */
   var track = $("#gallery-track");
   var dotsWrap = $("#gallery-dots");
   var countEl = $("#gallery-count");
@@ -1419,19 +1832,20 @@ body.locked{overflow:hidden}
     ["#d7f0e6","#a9dcc7"],
     ["#fdeeda","#f2c078"]
   ];
-  var tilts = ["-2deg","1.5deg","-1deg","2deg","0.5deg"];
+  var tilts = ["-3.5deg","2.5deg","-2deg","3deg","-1deg","1.8deg","-2.8deg","2.2deg"];
+  var tapes = ["rgba(242,182,196,.55)","rgba(179,211,234,.55)","rgba(248,210,142,.5)","rgba(179,211,234,.5)","rgba(242,182,196,.5)"];
+  var drops = ["2px","-4px","0px","-2px","3px","-1px"];
 
   function buildGallery(){
     track.innerHTML = "";
     dotsWrap.innerHTML = "";
-    var n = Math.max(PHOTOS.length, CAPTIONS.length, 5);
+    var n = Math.max(PHOTOS.length, 5);
     slides = [];
     for(var i=0;i<n;i++){
-      var cap = CAPTIONS[i % CAPTIONS.length];
       var gp = gradientPairs[i % gradientPairs.length];
       var inner = "";
       if(PHOTOS[i]){
-        inner = '<img src="'+PHOTOS[i]+'" alt="Foto '+cap+'" loading="lazy">';
+        inner = '<img src="'+PHOTOS[i]+'" alt="Foto dari album" loading="lazy">';
       } else {
         inner =
           '<div class="placeholder-mid" style="background:linear-gradient(160deg,'+gp[0]+','+gp[1]+')">'+
@@ -1442,9 +1856,8 @@ body.locked{overflow:hidden}
       }
       var slide = document.createElement("div");
       slide.className = "gallery-slide";
-      slide.innerHTML = '<figure class="polaroid" style="--tilt:'+tilts[i%tilts.length]+'">'+
+      slide.innerHTML = '<figure class="polaroid" style="--tilt:'+tilts[i%tilts.length]+';--tape:'+tapes[i%tapes.length]+';--drop:'+drops[i%drops.length]+'">'+
         '<div class="photo-frame">'+inner+'</div>'+
-        '<figcaption>'+cap+'</figcaption>'+
       '</figure>';
       if(PHOTOS[i]){
         (function(frameEl, g1, g2){
@@ -1497,10 +1910,15 @@ body.locked{overflow:hidden}
     if(Math.abs(dx) > 45){ goTo(galleryIndex + (dx<0?1:-1)); }
   }, {passive:true});
 
-  /* ---------- letter reveal ---------- */
+  /* ================================================================
+     [JS 13] SURAT — ISI SURAT ADA DI SINI.
+     EDIT: tiap baris di dalam var letterLines = [ ... ]; adalah SATU
+     PARAGRAF surat. Di bawah juga ada logika amplop (segel pecah),
+     popup buku, dan surat lengkap.
+     ================================================================ */
   var letterLines = [
       "12 September 2026.",
-    "Happy Birthday Cantikk. . . 🤸 🤸 cie cie sekarang kamu suda nambah tua ૮ ˙Ⱉ˙ ა semoga sehat selalu yah cantik, panjang umur dan semua yang kamu mau segera tercapai.. HAHAHA kamu hebat bangett bisa bertahan dan lalui semua masala-masala yang datanggg semoga hal baik selalu ada disamping kamuu😻🙌 semogaa dii umur kamu yangg sekarangg apapun yang kamu impikann dii umur sebelumnyaa bisaa terwujud yaaahh, semogaa diberikan panjangg umur, sehat selaluuUu, mudah rezeki nyaa, jangan pernah nyerah hal apapun itu ya untuk umur kamu yangg baruUu dan untuk kedepannyaa🙆, ujian apapunn ituu, seberatt apapun ituu nantii kamu jalanin nya haruss tabahh okee? kamu pasti bisaa lewatin ujian yangg kamu hadapii, ingat yaaa jangan lupa baik sama diri kamu sendirii sebelum kamu baik sama orang lainn, terimakasiii uda sekuat inii, banyak hal yang udah kamu lewatii dan banyak juga yangg belum kamu alamii, semakin dewasa semakin banyak tantangan yang kamu alamii, but its okeyy selagi kamu yakin sama dirii sendirii dan takdir semua akan baikk baikk aja percaya ajaa yaahh, sesedih apapun jangan lupa untuk selalu bersyukur yaaahh, semoga banyak kebahagiaann yangg kembaliii pada hariii iniiii 🙇👋, <br> INTINYAA HABEDEYAAHH SEMOGA PANJANG UMUR SEHATT SELALUU CANTIKK🥳🥳",
+    "Happy Birthday Cantikk🥳. . . 🤸 🤸 cie cie sekarang kamu suda nambah tua ૮ ˙Ⱉ˙ ა semoga sehat selalu yah cantik, panjang umur dan semua yang kamu mau segera tercapai.. HAHAHA kamu hebat bangett bisa bertahan dan lalui semua masala-masala yang datanggg semoga hal baik selalu ada disamping kamuu😻🙌 semogaa dii umur kamu yangg sekarangg apapun yang kamu impikann dii umur sebelumnyaa bisaa terwujud yaaahh, semogaa diberikan panjangg umur, sehat selaluuUu, mudah rezeki nyaa, jangan pernah nyerah hal apapun itu ya untuk umur kamu yangg baruUu dan untuk kedepannyaa🙆, ujian apapunn ituu, seberatt apapun ituu nantii kamu jalanin nya haruss tabahh okee? kamu pasti bisaa lewatin ujian yangg kamu hadapii, ingat yaaa jangan lupa baik sama diri kamu sendirii sebelum kamu baik sama orang lainn, terimakasiii uda sekuat inii, banyak hal yang udah kamu lewatii dan banyak juga yangg belum kamu alamii, semakin dewasa semakin banyak tantangan yang kamu alamii, but its okeyy selagi kamu yakin sama dirii sendirii dan takdir semua akan baikk baikk aja percaya ajaa yaahh, sesedih apapun jangan lupa untuk selalu bersyukur yaaahh, semoga banyak kebahagiaann yangg kembaliii pada hariii iniiii 🙇👋, <br> INTINYAA HABEDEYAAHH SEMOGA PANJANG UMUR SEHATT SELALUU CANTIKK🥳🥳",
     "DAN SEKARANG IZIN KAN AKU MENGUCAPKAN TERIMA KASIH UNTUK MU...",
     "''Terima kasih sudah menjadi dirimu yang tetap baik terhadap semua orang💐💐''. <br> ''Terima kasih sudah mengizinkanku mencintaimu''. <br>''Terima kasih sudah menemani ku dalam kondisi apapun🫂'', <br>''Terima kasih sudah mewarnai yang begitu indah dalam hidupku''.<br> dan Terima kasih sudah menerima aku meskipun jarak dan waktu memisahkan kita.",
     "Aku tidak perlu balas budi mu, ini aku buat memang untuk kamu😚.. dan kamu berhak mendapatkannya, karena ini semua aku buat dengan tulus dari hati ku yang paling dalam🤗",
@@ -1508,7 +1926,7 @@ body.locked{overflow:hidden}
     "Di hari ulang tahunmu ini, aku hanya berdoa semoga semua yang kamu impikan perlahan menjadi nyata🤲, semoga kamu selalu dikelilingi orang-orang yang menyayangimu sama tulusnya dengan aku, dan semoga kita diberi kesempatan untuk terus saling menjaga.",
     "Selamat ulang tahun, Cantikk🥳💐. Kamu sangat istimewa, kamu sangat berharga, dan kamu pantas mendapatkan segala hal baik dari aku. Terima kasih sudah menjadi bagian terindah dalam hidupku🥰. Aku mencintaimu hari ini, besok, dan selamanya.🩵"
   ];
-  /* ---------- letter: tampilan aplikasi + popup buku ---------- */
+  /* [JS 13b] LOGIKA AMPLOP & POPUP BUKU SURAT — buka/tutup, segel pecah */
   var letterApp = $("#letter-app");
   var letterOpenBtn = $("#letter-open-btn");
   var letterPopup = $("#letter-popup");
@@ -1554,13 +1972,83 @@ body.locked{overflow:hidden}
     if(letterOpenBtn) letterOpenBtn.style.display = "none";
     setTimeout(function(){ letterFull.scrollIntoView({behavior:"smooth", block:"center"}); }, 180);
   }
-  if(letterApp) letterApp.addEventListener("click", openLetter);
-  if(letterApp) letterApp.addEventListener("keydown", function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openLetter(); } });
-  if(letterOpenBtn) letterOpenBtn.addEventListener("click", openLetter);
+  var sealBreaking = false;
+  function spawnWaxShards(env){
+    var sealEl = env ? env.querySelector(".seal") : null;
+    if(!sealEl) return;
+    var r = sealEl.getBoundingClientRect();
+    var er = env.getBoundingClientRect();
+    var cx = r.left + r.width/2 - er.left, cy = r.top + r.height/2 - er.top;
+    for(var s=0;s<6;s++){
+      var sh = document.createElement("span");
+      sh.className = "wax-shard";
+      sh.style.left = cx + "px";
+      sh.style.top = cy + "px";
+      sh.style.setProperty("--dx", (Math.random()*90-45) + "px");
+      sh.style.setProperty("--dy", (Math.random()*-70-20) + "px");
+      sh.style.background = s % 2 === 0 ? "#bf5d7c" : "#a94a66";
+      env.appendChild(sh);
+      (function(el){ setTimeout(function(){ if(el.parentNode) el.remove(); }, 600); })(sh);
+    }
+  }
+  function breakSeal(){
+    if(sealBreaking) return;
+    var env = letterApp ? letterApp.querySelector(".env") : null;
+    if(!env){ openLetter(); return; }
+    sealBreaking = true;
+    env.classList.add("breaking");
+    spawnWaxShards(env);
+    setTimeout(function(){
+      sealBreaking = false;
+      openLetter();
+    }, 500);
+  }
+  if(letterApp) letterApp.addEventListener("click", breakSeal);
+  if(letterApp) letterApp.addEventListener("keydown", function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); breakSeal(); } });
+  if(letterOpenBtn) letterOpenBtn.addEventListener("click", breakSeal);
   if($("#letter-close-btn")) $("#letter-close-btn").addEventListener("click", closeLetter);
   if($("#letter-popup-backdrop")) $("#letter-popup-backdrop").addEventListener("click", closeLetter);
 
-  /* ---------- gallery: popup ala chat ---------- */
+  /* ================================================================
+     [JS 14] WHATSAPP — KIRIM BALASAN KE WHATSAPP.
+     EDIT var WA_NUMBER = nomor tujuan (format internasional tanpa '+',
+     contoh 0823... menjadi 62823...). Popup buka/tutup & kirim ada di sini.
+     ================================================================ */
+  var waPopup = $("#wa-popup");
+  var waApp = $("#wa-app");
+  var waInput = $("#wa-input");
+  var waEmpty = $("#wa-empty");
+  var WA_NUMBER = "6282325009901";
+  function openWa(){
+    if(!waPopup) return;
+    waPopup.classList.add("on");
+    document.body.classList.add("locked");
+    if(waEmpty) waEmpty.textContent = "";
+    if(waInput) setTimeout(function(){ waInput.focus(); }, 120);
+  }
+  function closeWa(){
+    if(!waPopup) return;
+    waPopup.classList.remove("on");
+    document.body.classList.remove("locked");
+  }
+  function sendWa(){
+    if(!waInput) return;
+    var msg = waInput.value.trim();
+    if(!msg){
+      if(waEmpty) waEmpty.textContent = "tulis pesannya dulu yah, sayang 💌";
+      return;
+    }
+    if(waEmpty) waEmpty.textContent = "";
+    window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg), "_blank");
+  }
+  if(waApp) waApp.addEventListener("click", openWa);
+  if(waApp) waApp.addEventListener("keydown", function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openWa(); } });
+  if($("#wa-close-btn")) $("#wa-close-btn").addEventListener("click", closeWa);
+  if($("#wa-popup-backdrop")) $("#wa-popup-backdrop").addEventListener("click", closeWa);
+  if($("#wa-send-btn")) $("#wa-send-btn").addEventListener("click", sendWa);
+
+  /* [JS 15] POPUP GALERI ALA-CHAT — popup putih, geser/klik/gulir untuk
+     ganti foto. Bisa ditutup via tombol X atau klik di luar popup. */
   try{
   var photoPopup = $("#photo-popup");
   var ppA = $("#pp-a");
@@ -1582,7 +2070,7 @@ body.locked{overflow:hidden}
   var from = ppActive === 0 ? ppA : ppB;
   var to = ppActive === 0 ? ppB : ppA;
   to.src = PHOTOS[ppIdx];
-  to.alt = CAPTIONS[ppIdx % CAPTIONS.length] || "Foto dari Zydan";
+  to.alt = "Foto dari album";
   to.classList.remove("pp-slide-r", "pp-slide-l", "pp-in");
   void to.offsetWidth;
   to.classList.add("pp-in", ppDir === 1 ? "pp-slide-r" : "pp-slide-l");
@@ -1630,6 +2118,9 @@ body.locked{overflow:hidden}
     galleryApp.addEventListener("keydown", function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openGalleryPopup(); } });
   }
   if(galleryOpenBtn) galleryOpenBtn.addEventListener("click", openGalleryPopup);
+  var ppCloseBtn = $("#pp-close-btn");
+  if(ppCloseBtn) ppCloseBtn.addEventListener("click", closeGalleryPopup);
+  if($("#pp-backdrop")) $("#pp-backdrop").addEventListener("click", closeGalleryPopup);
   var ppStartX = 0;
   var ppJustSwiped = false;
   var ppWheelLock = false;
@@ -1658,6 +2149,7 @@ body.locked{overflow:hidden}
   }
   document.addEventListener("keydown", function(e){
     if(e.key === "Escape"){
+      if(waPopup && waPopup.classList.contains("on")){ closeWa(); return; }
       if(photoPopup.classList.contains("on")){ closeGalleryPopup(); }
       else if($("#letter-popup") && $("#letter-popup").classList.contains("on")){ closeLetter(); }
     } else if(photoPopup.classList.contains("on") && e.key === "ArrowRight"){
@@ -1668,30 +2160,8 @@ body.locked{overflow:hidden}
   });
   }catch(e){ if(galleryFull) { try{ galleryFull.style.display = "block"; }catch(_e){} } }
 
-  /* ---------- reasons ---------- */
-  var reasons = [
-    {n:1, t:"Random nya Kamu", d:"tingkah lakumu adalah alasan kecil mengapa aku selalu ingin mengenalmu lebih jauh, karena setiap tingkahmu menyimpan kebahagiaan yang tidak pernah terasa biasa."},
-    {n:2, t:"Tertawa Mu", d:"tawa mu adalah melodi indah yang tak pernah bosan untuk kudengar, nada sederhana yang mampu membuat hatiku merasa senang."},
-    {n:3, t:"Marah Mu", d:"ibarat ombak yang meninggi di lautan, mungkin terlihat menakutkan, tetapi lautan tetap memiliki keindahan yang sama."},
-    {n:4, t:"Kecantikanmu", d:"ibarat seperti Bulan purnama dimalam hari yang tak pernah bosan kupandang"},
-    {n:5, t:"Senyum Manis Mu", d:"senyumu selalu membuatku bahagia saat melihat kemanisan senyum tipis itu."},
-    {n:6, t:"Perhatianmu", d:"kamu selalu mengutamakan orang lain, bahkan saat kamu ngerasa lebih terpuruk tapi tetap aja baik ke orang lain"},
-    {n:7, t:"Ketulusanmu", d:"kamu tulus kepada orang yang kamu cintai, aku yakin orang yang kamu cintai itu pasti sangat beruntung"},
-    {n:8, t:"Kehadiranmu", d:"dulu nya di hidup ku masih berwarna hitam & putih, entah kenapa aku jadi lebih berwana pas adanya kamu"}
-  ];
-  var reasonsGrid = $("#reasons-grid");
-  reasons.forEach(function(r){
-    var el = document.createElement("div");
-    el.className = "reason reveal";
-    el.innerHTML =
-      '<div class="heart-mark">' + HEART_SVG.replace('</svg>','</svg>') + '</div>' +
-      '<div class="num">'+r.n.toString()+'</div>' +
-      '<h4>'+r.t+'</h4>' +
-      '<p>'+r.d+'</p>';
-    reasonsGrid.appendChild(el);
-  });
-
-  /* ---------- candles ---------- */
+  /* [JS 16] LILIN & UCAPAN — logika meniup/mengetuk lilin + konfeti saat
+     semua padam. */
   var candles = $$(".candle");
   var blown = 0;
   var hint = $("#cake-hint");
@@ -1717,7 +2187,8 @@ body.locked{overflow:hidden}
     c.addEventListener("click", function(){ blowCandle(c); });
   });
 
-  /* ---------- music (via URL) ---------- */
+  /* [JS 17] MUSIK — putar/hentikan musik. File lagu ada di body
+     [BODY 13] (atribut src pada tag <audio>). */
   var musicBtn = $("#music-toggle");
   var bgm = document.getElementById("bgm");
   var playing = false;
@@ -1751,7 +2222,8 @@ body.locked{overflow:hidden}
   });
   bgm.addEventListener("ended", function(){ bgm.currentTime = 0; bgm.play(); });
 
-  /* ---------- scroll top + reveal ---------- */
+  /* [JS 18] TOMBOL KEMBALI ATAS + ANIMASI REVEAL — munculkan elemen
+     bertanda "reveal" ketika discroll, dan panah ke atas di pojok. */
   var revealEls = $$(".reveal");
   function initReveal(){
     var obs = new IntersectionObserver(function(entries){
@@ -1775,14 +2247,36 @@ body.locked{overflow:hidden}
     window.scrollTo({top:0, behavior:"smooth"});
   });
 
-  /* init loose hearts even before intro */
+  /* [JS 19] PELUNCURAN AWAL HIASAN — hati pertama sebelum intro,
+     balon utama, dan bunting. */
   for(var i=0;i<10;i++){ spawnHeart(false); }
 
   /* balloons mengambang di halaman utama */
-  for(var bi=0;bi<6;bi++){ setTimeout(function(){ spawnMainBalloon(true); }, Math.random()*3000); }
+  for(var bi=0;bi<(LITE?3:6);bi++){ setTimeout(function(){ spawnMainBalloon(true); }, Math.random()*3000); }
 
   /* hiasan gantung (bunting) di bagian atas */
   buildBunting();
+
+  /* balon-balon di belakang kue ulang tahun */
+  buildCakeBalloons();
+
+  /* [JS 20] BAR BACAAN + JUDUL MINI — memperbarui garis progres dan
+     label kecil saat halaman discroll. */
+  var readBar = $("#read-bar");
+  var readTitle = $("#read-title");
+  function updateRead(){
+    var doc = document.documentElement;
+    var h = Math.max(doc.scrollHeight, doc.offsetHeight) - window.innerHeight;
+    var p = h > 0 ? (window.pageYOffset / h) * 100 : 100;
+    if(readBar) readBar.firstElementChild.style.width = p + "%";
+    if(readTitle) readTitle.classList.toggle("show", window.pageYOffset > 160);
+  }
+  window.addEventListener("scroll", updateRead, {passive:true});
+  window.addEventListener("resize", updateRead);
+  updateRead();
+
+  /* [JS 21] AKHIR SCRIPT UTAMA — selesai. (Kelanjutan: script [KUNCI]
+     di bawah untuk tanggal buka). */
 })();
 </script>
 
@@ -1804,7 +2298,7 @@ body.locked{overflow:hidden}
    ================================================================ */
 (function(){
 
-  /* >>>>>>>>>> UBAH TANGGAL BUKA DI SINI <<<<<<<<<< */
+  /* >>>>>>>>>> [KUNCI] UBAH TANGGAL BUKA DI SINI <<<<<<<<<< */
   var UNLOCK_DATE = '2026-09-12T00:00:00';
   /* ============================================== */
 
