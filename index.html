@@ -149,7 +149,7 @@
   .intro-kicker{
     font-size:.72rem;font-weight:500;letter-spacing:5px;text-transform:uppercase;
     color:var(--blue-700);background:rgba(255,255,255,.4);padding:8px 18px;
-    border-radius:999px;border:1px solid rgba(255,255,255,.6);backdrop-filter:blur(6px);
+    border-radius:999px;border:1px solid rgba(255,255,255,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
     margin-bottom:22px;
   }
   .intro-title{
@@ -204,7 +204,7 @@
   .tap-hint{
     display:inline-flex;align-items:center;gap:11px;
     padding:13px 26px;border-radius:999px;
-    background:rgba(255,255,255,.42);backdrop-filter:blur(10px);
+    background:rgba(255,255,255,.42);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
     border:1px solid rgba(255,255,255,.65);
     color:var(--ink);font-size:.78rem;letter-spacing:3px;text-transform:uppercase;font-weight:500;
     margin-top:34px;
@@ -267,7 +267,7 @@
      navigasi. Daftar fotonya diubah di JS [JS 2] (var PHOTOS). */
   .card{
     background:rgba(255,255,255,.82);
-    backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
     border:1px solid rgba(255,255,255,.7);
     border-radius:var(--radius);
     box-shadow:var(--shadow);
@@ -490,7 +490,7 @@
     border:none;cursor:pointer;background:rgba(46,90,127,.9);color:#fff;
     display:flex;align-items:center;justify-content:center;
     box-shadow:0 12px 26px -10px rgba(46,90,127,.7);
-    backdrop-filter:blur(6px);transition:transform .2s ease;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:transform .2s ease;
   }
   .float-btn:hover{transform:scale(1.1)}
   .float-btn svg{width:22px;height:22px;fill:currentColor}
@@ -986,13 +986,13 @@ body.locked{overflow:hidden}
 
 /* ================================================================
    [CSS 27] MODE HEMAT (HP LEMAH) — otomatis mematikan animasi berat
-   (blur, kilau, dll) bila HP/PC terdeteksi lemah oleh JS [JS 1].
+   bila HP/PC terdeteksi lemah oleh JS [JS 1].
+   CATATAN: efek blur (kaca buram + lingkaran glow pink) TIDAK ikut
+   dimatikan, supaya tampilan tetap cantik di semua perangkat.
    ================================================================ */
-html.lite *,html.lite *::before,html.lite *::after{backdrop-filter:none !important;-webkit-backdrop-filter:none !important}
-html.lite .intro-glow{filter:none}
 html.lite .intro-heart-f,.lite .bunt-flag,.lite .bunt-knot{animation:none}
 html.lite .balloon{animation:none}
-html.lite .heart,.lite .balloon-up{animation-duration:999s}
+html.lite .heart{animation-duration:999s}
 
 </style>
 </head>
@@ -1634,8 +1634,8 @@ html.lite .heart,.lite .balloon-up{animation-duration:999s}
     b.style.width = size+"px";
     b.style.height = Math.round(size*110/60)+"px";
     b.style.left = Math.random()*100+"%";
-    b.style.animationDuration = (20+Math.random()*14)+"s";
-    b.style.animationDelay = (Math.random()*6)+"s";
+    b.style.animationDuration = (15+Math.random()*11)+"s";
+    b.style.animationDelay = (Math.random()*5)+"s";
     b.style.setProperty("--bdx", (Math.random()*120-60)+"px");
     b.style.opacity = "0";
     balloonsLayer.appendChild(b);
@@ -2252,7 +2252,7 @@ html.lite .heart,.lite .balloon-up{animation-duration:999s}
   for(var i=0;i<10;i++){ spawnHeart(false); }
 
   /* balloons mengambang di halaman utama */
-  for(var bi=0;bi<(LITE?3:6);bi++){ setTimeout(function(){ spawnMainBalloon(true); }, Math.random()*3000); }
+  for(var bi=0;bi<(LITE?9:15);bi++){ setTimeout(function(){ spawnMainBalloon(true); }, Math.random()*2600); }
 
   /* hiasan gantung (bunting) di bagian atas */
   buildBunting();
