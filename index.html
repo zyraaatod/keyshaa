@@ -1911,16 +1911,14 @@ html.lite .heart{animation-duration:999s}
     tx(cur);
     sync();
   }
-  function noTran(){
-    track.style.transition = "none";
-    void track.offsetWidth;
-    track.style.transition = "";
-  }
   function snapBack(){
-    if(cur >= nSlides + 1){
-      noTran(); cur = 1; tx(cur); sync();
-    } else if(cur <= 0){
-      noTran(); cur = nSlides; tx(cur); sync();
+    if(cur >= nSlides + 1 || cur <= 0){
+      track.style.transition = "none";
+      cur = ((cur - 1) % nSlides + nSlides) % nSlides + 1;
+      tx(cur);
+      void track.offsetWidth;
+      track.style.transition = "";
+      sync();
     }
   }
   $("#prev-btn").addEventListener("click", function(){ goTo(cur-1); });
@@ -2116,6 +2114,7 @@ html.lite .heart{animation-duration:999s}
     ppA.style.opacity = ""; ppB.style.opacity = "";
   }
   function ppShow(){
+  ppGen++;
   var total = PHOTOS.length;
   var from = ppActive === 0 ? ppA : ppB;
   var to = ppActive === 0 ? ppB : ppA;
@@ -2133,13 +2132,20 @@ html.lite .heart{animation-duration:999s}
   to.style.transform = "translateX(0)";
   from.style.transform = "translateX("+(-dirPx*100)+"%)";
   (function(inEl, outEl){
+    var gen = ppGen;
+    var cleaned = false;
     var done = function(ev){
-      if(ev.target !== inEl) return;
-      outEl.classList.remove("pp-curr");
+      if(cleaned) return;
+      if(gen !== ppGen) return;
+      if(ev && ev.target !== inEl) return;
+      cleaned = true;
+      outEl.className = "pp-photo";
+      inEl.className = "pp-photo pp-curr";
       ppClearInline();
       inEl.removeEventListener("transitionend", done);
     };
     inEl.addEventListener("transitionend", done);
+    setTimeout(done, 620);
   })(to, from);
   ppActive = ppActive === 0 ? 1 : 0;
   ppCounter.textContent = (ppIdx + 1) + " / " + total;
@@ -2187,6 +2193,7 @@ html.lite .heart{animation-duration:999s}
   var ppHorizEngaged = false;
   var ppDragLimited = false;
   var ppLastTarget = -1;
+  var ppGen = 0;
   function ppCur(){ return ppActive === 0 ? ppA : ppB; }
   function ppOther(){ return ppActive === 0 ? ppB : ppA; }
   function ppW(){ return ppFrame.offsetWidth || 320; }
@@ -2200,13 +2207,20 @@ html.lite .heart{animation-duration:999s}
       curEl.style.transform = "translateX("+(-dirPx*100)+"%)";
       othEl.style.transform = "translateX(0)";
       (function(outEl, inEl){
+        var gen = ppGen;
+        var cleaned = false;
         var done = function(ev){
-          if(ev.target !== inEl) return;
-          outEl.classList.remove("pp-curr");
+          if(cleaned) return;
+          if(gen !== ppGen) return;
+          if(ev && ev.target !== inEl) return;
+          cleaned = true;
+          outEl.className = "pp-photo";
+          inEl.className = "pp-photo pp-curr";
           ppClearInline();
           inEl.removeEventListener("transitionend", done);
         };
         inEl.addEventListener("transitionend", done);
+        setTimeout(done, 620);
       })(curEl, othEl);
       ppActive = ppActive === 0 ? 1 : 0;
       ppCounter.textContent = (ppIdx + 1) + " / " + PHOTOS.length;
@@ -2214,8 +2228,9 @@ html.lite .heart{animation-duration:999s}
       curEl.style.transform = "translateX(0)";
       othEl.style.transform = "translateX(0)";
       othEl.style.opacity = "";
-      othEl.classList.remove("pp-curr");
-      setTimeout(ppClearInline, 450);
+      othEl.className = "pp-photo";
+      curEl.className = "pp-photo pp-curr";
+      (function(g){ setTimeout(function(){ if(ppGen === g) ppClearInline(); }, 450); })(ppGen);
     }
     ppDragging = false;
     ppHorizEngaged = false;
@@ -2231,6 +2246,12 @@ html.lite .heart{animation-duration:999s}
       ppHorizEngaged = false;
       ppDragLimited = false;
       ppLastTarget = -1;
+      ppGen++;
+      ppClearInline();
+      var c0 = ppCur(), o0 = ppOther();
+      c0.className = "pp-photo pp-curr";
+      o0.className = "pp-photo";
+      c0.style.transition = "none"; o0.style.transition = "none";
     }, {passive:true});
     ppFrame.addEventListener("touchmove", function(e){
       if(!ppDragging) return;
@@ -2279,15 +2300,6 @@ html.lite .heart{animation-duration:999s}
       ppJustSwiped = true;
       setTimeout(function(){ ppJustSwiped = false; }, 320);
       if(ppDragLimited){
-        if(ppDragDx < 0 && ppIdx === PHOTOS.length - 1 && abs > threshold * 0.8){
-          ppDragging = false;
-          ppHorizEngaged = false;
-          ppDragLimited = false;
-          ppLastTarget = -1;
-          ppClearInline();
-          closeGalleryPopup();
-          return;
-        }
         ppEndDrag(false);
         return;
       }
