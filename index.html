@@ -1039,7 +1039,7 @@ html.lite #cam-popup .cam-flash.go{animation:none}
   background:linear-gradient(165deg,#8fbce0,#2e5a7f);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.4),0 18px 34px -18px rgba(46,90,127,.6);
 }
-#cam-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+#cam-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transform:scaleX(-1)}
 #cam-overlay{position:absolute;inset:0;overflow:hidden}
 .cam-ring{
   position:absolute;left:50%;top:55%;width:80%;aspect-ratio:1/1;transform:translate(-50%,-55%);
@@ -2928,6 +2928,8 @@ function camRenderShot(){
   ctx0.beginPath();
   ctx0.arc(cx, cy, r, 0, Math.PI * 2);
   ctx0.clip();
+  ctx0.translate(S, 0);
+  ctx0.scale(-1, 1);
   ctx0.drawImage(camVideo, sx, sy, sw, sh, 0, 0, S, S);
   ctx0.restore();
   camRingDraw(ctx0, cx, cy, r, S);
