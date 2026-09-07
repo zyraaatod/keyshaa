@@ -53,6 +53,48 @@
     100%{transform:translateY(-110vh) translateX(var(--dx,30px)) rotate(18deg) scale(var(--s,1));opacity:0}
   }
 
+  /* ---------- main balloons ---------- */
+  #balloons-layer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+  .balloon-up{position:absolute;bottom:-150px;animation:balloonUp linear infinite;opacity:0}
+  .balloon-up svg{width:100%;height:100%;display:block;filter:drop-shadow(0 6px 12px rgba(46,90,127,.16))}
+  @keyframes balloonUp{
+    0%{transform:translate(0,0) rotate(-7deg);opacity:0}
+    12%{opacity:.5}
+    88%{opacity:.4}
+    100%{transform:translate(var(--bdx,50px),-115vh) rotate(9deg);opacity:0}
+  }
+
+  /* ---------- corner balloons (kiri kanan bawah, goyang pelan) ---------- */
+  #balloon-deco{position:fixed;left:0;right:0;bottom:0;z-index:3;pointer-events:none}
+  #balloon-deco .bunch{position:absolute;bottom:6px;display:flex;align-items:flex-end;transform-origin:50% 100%}
+  #balloon-deco .bunch.left{left:4vw}
+  #balloon-deco .bunch.right{right:4vw}
+  #balloon-deco .bunch .bd{position:relative;margin:0 -7px;transform-origin:50% 115%;animation:bdSway ease-in-out infinite}
+  #balloon-deco .bunch .bd svg{display:block;width:100%;height:auto;filter:drop-shadow(0 10px 18px rgba(46,90,127,.22))}
+  #balloon-deco .bunch.left{animation:bunchSway 4.6s ease-in-out infinite}
+  #balloon-deco .bunch.right{animation:bunchSway 5.4s ease-in-out infinite;animation-delay:.6s}
+  #balloon-deco .bunch.left .bd{animation-duration:3.2s}
+  #balloon-deco .bunch.right .bd{animation-duration:3.8s}
+  #balloon-deco .bd.b-1{width:64px}
+  #balloon-deco .left .bd.b-2{width:46px;animation-delay:.35s}
+  #balloon-deco .left .bd.b-3{width:38px;animation-delay:.7s}
+  #balloon-deco .right .bd.b-1{width:56px}
+  #balloon-deco .right .bd.b-2{width:40px;animation-delay:.5s}
+  @keyframes bunchSway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+  @keyframes bdSway{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+
+  /* ---------- bunting: hiasan gantung di atas ---------- */
+  #bunting{position:fixed;top:0;left:0;right:0;height:86px;z-index:3;pointer-events:none;overflow:visible}
+  #bunting .bunt-line{position:absolute;top:5px;left:0;right:0}
+  #bunting .bunt-line svg{display:block;width:100%;height:22px}
+  #bunting .bunt-flag{position:absolute;width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:24px solid var(--fc,var(--pink));transform-origin:50% 0;animation:flagFlutter ease-in-out infinite}
+  #bunting .bunt-knot{position:absolute;width:6px;height:6px;border-radius:50%;background:#ffffff;box-shadow:0 0 0 3px var(--pink-soft)}
+  #bunting .bunt-balloon{position:absolute;top:-8px;width:42px;animation:bdSway ease-in-out infinite;transform-origin:50% 0}
+  #bunting .bunt-balloon svg{display:block;width:100%;height:auto;filter:drop-shadow(0 8px 14px rgba(46,90,127,.22))}
+  #bunting .bunt-balloon.left-ball{left:10px;animation-duration:4s}
+  #bunting .bunt-balloon.right-ball{right:10px;animation-duration:4.6s;animation-delay:.7s}
+  @keyframes flagFlutter{0%,100%{transform:rotate(-2.2deg)}50%{transform:rotate(2.2deg)}}
+
   /* ---------- confetti canvas ---------- */
   #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:60}
 
@@ -137,6 +179,21 @@
   @keyframes ping{0%{box-shadow:0 0 0 0 rgba(242,182,196,.7)}100%{box-shadow:0 0 0 13px rgba(242,182,196,0)}}
   .intro-heart-f{position:absolute;bottom:-30px;opacity:0;pointer-events:none}
   .intro-heart-f svg{display:block;fill:#fff;filter:drop-shadow(0 4px 10px rgba(46,90,127,.18))}
+
+  /* ---------- intro balloons ---------- */
+  #intro-balloons{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+  .balloon{position:absolute;width:58px;height:106px;animation:balloonBob ease-in-out infinite;will-change:transform}
+  .balloon svg{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 14px rgba(46,90,127,.2))}
+  @keyframes balloonBob{
+    0%,100%{transform:translateY(0) rotate(-3deg)}
+    50%{transform:translateY(-18px) rotate(3deg)}
+  }
+  .balloon.pop{transform:scale(1.3);opacity:0;transition:transform .18s ease-in,opacity .18s ease-in;animation:none}
+  .burst-piece{position:fixed;width:9px;height:9px;border-radius:3px;pointer-events:none;z-index:110;animation:burstFly .6s ease-out forwards}
+  @keyframes burstFly{
+    0%{transform:translate(-50%,-50%) scale(1) rotate(0deg);opacity:1}
+    100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.35) rotate(180deg);opacity:0}
+  }
 
   /* ---------- main wrapper ---------- */
   main{position:relative;z-index:2}
@@ -484,6 +541,18 @@ body.locked{overflow:hidden}
   #final{min-height:70dvh}
 }
 @media (max-width:520px){
+  /* --- bunting atas: lebih ringkas di HP --- */
+  #bunting{height:70px}
+  #bunting .bunt-line svg{height:18px}
+  #bunting .bunt-balloon{width:34px}
+  /* --- balon sudut kiri/kanan bawah: lebih ramping di HP --- */
+  #balloon-deco .bd.b-1{width:46px}
+  #balloon-deco .left .bd.b-2{width:34px}
+  #balloon-deco .left .bd.b-3{width:28px}
+  #balloon-deco .right .bd.b-1{width:40px}
+  #balloon-deco .right .bd.b-2{width:30px}
+  #balloon-deco .bunch.left{left:2vw}
+  #balloon-deco .bunch.right{right:2vw}
   /* --- layar kunci --- */
   #site-lock{padding:14px}
   #site-lock .lock-box{padding:28px 18px 32px}
@@ -536,7 +605,7 @@ body.locked{overflow:hidden}
     <p class="lock-kicker">Untuk Keyshaa</p>
     <br>
     <h1>Terkunci Sementara</h1>
-    <p class="lock-msg">Mohon bersabar yahh cantikk, halaman ini akan segera terbuka.</p>
+    <p class="lock-msg">Mohon bersabar yahh cantikk, web kamu akan terbuka sendiri kok.</p>
 
     <!-- UBAH TANGGAL BUKA YANG DITAMPILKAN DI SINI -->
     <div class="lock-date-card">
@@ -563,11 +632,35 @@ body.locked{overflow:hidden}
 </div>
 
 <div id="hearts-layer"></div>
+<div id="balloons-layer"></div>
+<div id="balloon-deco" aria-hidden="true">
+  <div class="bunch left">
+    <div class="bd b-1">
+      <svg viewBox="0 0 60 110"><defs><linearGradient id="lb1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="22%" stop-color="#f8b6c6"/><stop offset="100%" stop-color="#e97f9c"/></linearGradient></defs><path d="M30 4 C46 4 57 16 57 35 C57 55 40 65 30 71 C20 65 3 55 3 35 C3 16 14 4 30 4 Z" fill="url(#lb1)"/><path d="M30 70 l-6 11 h12 z" fill="rgba(0,0,0,.08)"/><path d="M30 80 q7 12 -1 28" stroke="rgba(90,110,130,.5)" stroke-width="1.3" fill="none"/><ellipse cx="20" cy="19" rx="6" ry="11" fill="#ffffff" opacity=".45" transform="rotate(-24 20 19)"/></svg>
+    </div>
+    <div class="bd b-2">
+      <svg viewBox="0 0 60 110"><defs><linearGradient id="lb2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="22%" stop-color="#a9cfe8"/><stop offset="100%" stop-color="#5b8db8"/></linearGradient></defs><path d="M30 4 C46 4 57 16 57 35 C57 55 40 65 30 71 C20 65 3 55 3 35 C3 16 14 4 30 4 Z" fill="url(#lb2)"/><path d="M30 70 l-6 11 h12 z" fill="rgba(0,0,0,.08)"/><path d="M30 80 q7 12 -1 28" stroke="rgba(90,110,130,.5)" stroke-width="1.3" fill="none"/><ellipse cx="20" cy="19" rx="6" ry="11" fill="#ffffff" opacity=".45" transform="rotate(-24 20 19)"/></svg>
+    </div>
+    <div class="bd b-3">
+      <svg viewBox="0 0 60 110"><defs><linearGradient id="lb3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="22%" stop-color="#fcd9a8"/><stop offset="100%" stop-color="#f4b46d"/></linearGradient></defs><path d="M30 4 C46 4 57 16 57 35 C57 55 40 65 30 71 C20 65 3 55 3 35 C3 16 14 4 30 4 Z" fill="url(#lb3)"/><path d="M30 70 l-6 11 h12 z" fill="rgba(0,0,0,.08)"/><path d="M30 80 q7 12 -1 28" stroke="rgba(90,110,130,.5)" stroke-width="1.3" fill="none"/><ellipse cx="20" cy="19" rx="6" ry="11" fill="#ffffff" opacity=".45" transform="rotate(-24 20 19)"/></svg>
+    </div>
+  </div>
+  <div class="bunch right">
+    <div class="bd b-1">
+      <svg viewBox="0 0 60 110"><defs><linearGradient id="rb1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="22%" stop-color="#e6c9ef"/><stop offset="100%" stop-color="#b98ad1"/></linearGradient></defs><path d="M30 4 C46 4 57 16 57 35 C57 55 40 65 30 71 C20 65 3 55 3 35 C3 16 14 4 30 4 Z" fill="url(#rb1)"/><path d="M30 70 l-6 11 h12 z" fill="rgba(0,0,0,.08)"/><path d="M30 80 q7 12 -1 28" stroke="rgba(90,110,130,.5)" stroke-width="1.3" fill="none"/><ellipse cx="20" cy="19" rx="6" ry="11" fill="#ffffff" opacity=".45" transform="rotate(-24 20 19)"/></svg>
+    </div>
+    <div class="bd b-2">
+      <svg viewBox="0 0 60 110"><defs><linearGradient id="rb2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="22%" stop-color="#a9dcc7"/><stop offset="100%" stop-color="#5fa88a"/></linearGradient></defs><path d="M30 4 C46 4 57 16 57 35 C57 55 40 65 30 71 C20 65 3 55 3 35 C3 16 14 4 30 4 Z" fill="url(#rb2)"/><path d="M30 70 l-6 11 h12 z" fill="rgba(0,0,0,.08)"/><path d="M30 80 q7 12 -1 28" stroke="rgba(90,110,130,.5)" stroke-width="1.3" fill="none"/><ellipse cx="20" cy="19" rx="6" ry="11" fill="#ffffff" opacity=".45" transform="rotate(-24 20 19)"/></svg>
+    </div>
+  </div>
+<div id="bunting" aria-hidden="true"></div>
+</div>
 <canvas id="confetti-canvas"></canvas>
 
 <div id="intro">
   <div class="intro-glow g1"></div>
   <div class="intro-glow g2"></div>
+  <div id="intro-balloons"></div>
   <div class="intro-scene">
     <p class="intro-kicker">TOLONG DI BACA DENGAN TELITI YAH,<br> DIBACA SATU PER SATU YAH CANTIK<br>BIAR KAMU PAHAM APA YANG AKU MAKSUD</p>
     <p class="intro-name">For Keyshaa</p>
@@ -737,6 +830,29 @@ body.locked{overflow:hidden}
   var $ = function(s){ return document.querySelector(s); };
   var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
   var HEART_SVG = '<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+  var BALLOON_COLORS = [
+    ["#f8b6c6","#e97f9c"],
+    ["#a9cfe8","#5b8db8"],
+    ["#fcd9a8","#f4b46d"],
+    ["#e6c9ef","#b98ad1"],
+    ["#a9dcc7","#5fa88a"],
+    ["#f3c3da","#dd7fa4"]
+  ];
+  var balSeq = 0;
+  function balSvg(c1, c2){
+    var gid = "balGrad" + (balSeq++);
+    return '<svg viewBox="0 0 60 110" aria-hidden="true"><defs>'+
+      '<linearGradient id="'+gid+'" x1="0" y1="0" x2="1" y2="1">'+
+      '<stop offset="0%" stop-color="#ffffff"/>'+
+      '<stop offset="22%" stop-color="'+c1+'"/>'+
+      '<stop offset="100%" stop-color="'+c2+'"/>'+
+      '</linearGradient></defs>'+
+      '<path d="M30 4 C46 4 57 16 57 35 C57 55 40 65 30 71 C20 65 3 55 3 35 C3 16 14 4 30 4 Z" fill="url(#'+gid+')"/>'+
+      '<path d="M30 70 l-6 11 h12 z" fill="rgba(0,0,0,.08)"/>'+
+      '<path d="M30 80 q7 12 -1 28" stroke="rgba(90,110,130,.5)" stroke-width="1.3" fill="none"/>'+
+      '<ellipse cx="20" cy="19" rx="6" ry="11" fill="#ffffff" opacity=".45" transform="rotate(-24 20 19)"/>'+
+      '</svg>';
+  }
 
   /* ---------- intro ---------- */
   var intro = $("#intro");
@@ -744,6 +860,7 @@ body.locked{overflow:hidden}
   function enter(){
     if(started) return;
     started = true;
+    popBalloons();
     intro.classList.add("hidden");
     startMusic();
     generateHearts();
@@ -772,6 +889,58 @@ body.locked{overflow:hidden}
     sp.style.animation = "sparkle " + (2 + Math.random()*1.8) + "s ease-in-out " + (Math.random()*2) + "s infinite";
     sparkLayer.appendChild(sp);
   }
+
+  /* ---------- intro balloons: pop saat hati disentuh ---------- */
+  var balloonLayer = $("#intro-balloons");
+  var balloonEls = [];
+  function buildBalloons(){
+    var n = 9;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var cx = vw/2, cy = vh/2;
+    for(var i=0;i<n;i++){
+      var b = document.createElement("div");
+      b.className = "balloon";
+      var cols = BALLOON_COLORS[i % BALLOON_COLORS.length];
+      b.innerHTML = balSvg(cols[0], cols[1]);
+      var ang = (Math.PI*2 * i / n) + Math.PI/2;
+      var rx = Math.min(vw, vh) * (0.30 + (i%3)*0.06);
+      var ry = Math.min(vw, vh) * (0.30 + ((i+1)%3)*0.06) * 0.78;
+      b.style.left = (cx + Math.cos(ang)*rx - 29) + "px";
+      b.style.top  = (cy + Math.sin(ang)*ry - 53) + "px";
+      b.style.animationDuration = (3.4 + (i%4)*0.7) + "s";
+      b.style.animationDelay = (Math.random()*1.6) + "s";
+      b.dataset.colors = cols[1];
+      balloonLayer.appendChild(b);
+      balloonEls.push(b);
+    }
+  }
+  function popBalloons(){
+    balloonEls.forEach(function(el, i){
+      setTimeout(function(){ popBalloon(el); }, i*85);
+    });
+  }
+  function popBalloon(el){
+    if(!el.parentNode) return;
+    var r = el.getBoundingClientRect();
+    var cx = r.left + r.width/2, cy = r.top + r.height*0.4;
+    for(var p=0;p<8;p++){
+      var piece = document.createElement("span");
+      piece.className = "burst-piece";
+      piece.style.left = cx + "px";
+      piece.style.top = cy + "px";
+      piece.style.setProperty("--dx", (Math.random()*170-85) + "px");
+      piece.style.setProperty("--dy", (Math.random()*-150-25) + "px");
+      piece.style.background = p % 3 === 0 ? "#fdeef2" : el.dataset.colors;
+      var sz = 6 + Math.random()*6;
+      piece.style.width = sz + "px";
+      piece.style.height = sz + "px";
+      document.body.appendChild(piece);
+      (function(pe){ setTimeout(function(){ pe.remove(); }, 650); })(piece);
+    }
+    el.classList.add("pop");
+    setTimeout(function(){ if(el.parentNode) el.remove(); }, 210);
+  }
+  buildBalloons();
 
   /* floating hearts in intro background */
   var introFloatLayer = document.createElement("div");
@@ -825,6 +994,72 @@ body.locked{overflow:hidden}
       });
     }
   }
+
+  /* ---------- balloons di halaman utama ---------- */
+  var balloonsLayer = document.getElementById("balloons-layer");
+  function spawnMainBalloon(loop){
+    var cols = BALLOON_COLORS[Math.floor(Math.random()*BALLOON_COLORS.length)];
+    var b = document.createElement("div");
+    b.className = "balloon-up";
+    b.innerHTML = balSvg(cols[0], cols[1]);
+    var size = 34 + Math.random()*30;
+    b.style.width = size+"px";
+    b.style.height = Math.round(size*110/60)+"px";
+    b.style.left = Math.random()*100+"%";
+    b.style.animationDuration = (20+Math.random()*14)+"s";
+    b.style.animationDelay = (Math.random()*6)+"s";
+    b.style.setProperty("--bdx", (Math.random()*120-60)+"px");
+    b.style.opacity = "0";
+    balloonsLayer.appendChild(b);
+    if(loop){
+      b.addEventListener("animationiteration", function(){
+        b.remove();
+        spawnMainBalloon(true);
+      });
+    }
+  }
+
+  /* ---------- bunting: hiasan gantung di atas ---------- */
+  var buntFlagColors = ["#e97f9c","#7fa8cc","#f4c56d","#a9dcc7","#c9a7e0","#f2b6c4","#a9cfe8"];
+  function buildBunting(){
+    var bunt = document.getElementById("bunting");
+    if(!bunt) return;
+    var w = window.innerWidth;
+    bunt.innerHTML = "";
+    var line = document.createElement("div");
+    line.className = "bunt-line";
+    line.innerHTML = '<svg viewBox="0 0 100 22" preserveAspectRatio="none" width="100%" height="22">'+
+      '<path d="M0 6 Q50 20 100 6" stroke="#b9cfe4" stroke-width="2.5" fill="none"/></svg>';
+    bunt.appendChild(line);
+    var n = Math.max(7, Math.min(16, Math.round(w/72)));
+    for(var i=0;i<n;i++){
+      var t = n === 1 ? 0.5 : i/(n-1);
+      var x = t * w;
+      var y = 6 + 14 * (4 * t * (1 - t));
+      var f = document.createElement("span");
+      f.className = "bunt-flag";
+      f.style.left = (x - 13) + "px";
+      f.style.top = (y + 3) + "px";
+      f.style.setProperty("--fc", buntFlagColors[i % buntFlagColors.length]);
+      f.style.animationDuration = (2.8 + Math.random()*1.2) + "s";
+      f.style.animationDelay = (Math.random()*1.5) + "s";
+      bunt.appendChild(f);
+      var k = document.createElement("span");
+      k.className = "bunt-knot";
+      k.style.left = (x - 3) + "px";
+      k.style.top = (y - 1) + "px";
+      bunt.appendChild(k);
+    }
+    var lb = document.createElement("div");
+    lb.className = "bunt-balloon left-ball";
+    lb.innerHTML = balSvg("#a9cfe8", "#5b8db8");
+    bunt.appendChild(lb);
+    var rb = document.createElement("div");
+    rb.className = "bunt-balloon right-ball";
+    rb.innerHTML = balSvg("#f8b6c6", "#e97f9c");
+    bunt.appendChild(rb);
+  }
+  window.addEventListener("resize", buildBunting);
 
   /* ---------- confetti ---------- */
   var canvas = $("#confetti-canvas");
@@ -1157,6 +1392,12 @@ body.locked{overflow:hidden}
 
   /* init loose hearts even before intro */
   for(var i=0;i<10;i++){ spawnHeart(false); }
+
+  /* balloons mengambang di halaman utama */
+  for(var bi=0;bi<6;bi++){ setTimeout(function(){ spawnMainBalloon(true); }, Math.random()*3000); }
+
+  /* hiasan gantung (bunting) di bagian atas */
+  buildBunting();
 })();
 </script>
 
@@ -1179,7 +1420,7 @@ body.locked{overflow:hidden}
 (function(){
 
   /* >>>>>>>>>> UBAH TANGGAL BUKA DI SINI <<<<<<<<<< */
-  var UNLOCK_DATE = '2026-09-12T00:00:00';
+  var UNLOCK_DATE = '2026-09-04T00:00:00';
   /* ============================================== */
 
   /* --- jangan ubah bagian di bawah ini --- */
