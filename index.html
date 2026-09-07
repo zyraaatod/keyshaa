@@ -391,34 +391,175 @@
 #site-lock{
  position:fixed;inset:0;z-index:9999;
  display:flex;align-items:center;justify-content:center;
- text-align:center;padding:25px;
- background:linear-gradient(160deg,#dceef9,#eef8fd,#fbdfe6);
+ text-align:center;padding:25px;overflow:hidden;
+ background:linear-gradient(160deg,#c9e2f4 0%,#eef8fd 45%,#fbeff4 100%);
  color:#2f4d6b;
+ font-family:var(--sans);
 }
+#site-lock .lock-glow{position:absolute;border-radius:50%;filter:blur(72px);pointer-events:none}
+#site-lock .lg-1{width:430px;height:430px;right:-150px;top:-140px;background:rgba(255,255,255,.85)}
+#site-lock .lg-2{width:500px;height:500px;left:-190px;bottom:-190px;background:rgba(255,207,224,.55)}
+#site-lock .lg-3{width:330px;height:330px;left:20%;top:6%;background:rgba(179,211,234,.5);opacity:.7}
 #site-lock .lock-box{
- background:rgba(255,255,255,.85);
- padding:45px 30px;
- border-radius:24px;
- box-shadow:0 18px 40px -18px rgba(46,90,127,.45);
- max-width:420px;
+ position:relative;z-index:2;
+ background:rgba(255,255,255,.78);
+ backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+ border:1px solid rgba(255,255,255,.92);
+ border-radius:30px;
+ box-shadow:0 34px 74px -32px rgba(46,90,127,.55), inset 0 1px 0 rgba(255,255,255,.95);
+ padding:clamp(34px,6vw,54px) clamp(24px,6vw,46px);
+ max-width:460px;width:100%;
+ animation:lockIn .9s cubic-bezier(.22,.61,.36,1) both;
 }
-#site-lock h1{font-family:'Great Vibes',cursive;font-size:3rem;margin-bottom:15px;}
-#site-lock p{font-weight:300;}
-#site-lock .date{font-weight:600;margin-top:15px;color:#4a7ba6;}
+@keyframes lockIn{0%{opacity:0;transform:translateY(28px) scale(.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
+#site-lock .lock-badge{
+ position:relative;width:92px;height:92px;margin:0 auto 24px;border-radius:50%;
+ background:linear-gradient(145deg,#ffffff 0%,#e3f1fa 90%);
+ border:1px solid rgba(255,255,255,.95);
+ display:flex;align-items:center;justify-content:center;
+ box-shadow:0 16px 34px -14px rgba(46,90,127,.5), inset 0 1px 2px rgba(255,255,255,.95);
+ animation:breathe 3s ease-in-out infinite;
+}
+#site-lock .lock-badge::before{
+ content:"";position:absolute;inset:-14px;border-radius:50%;
+ border:1.5px dashed rgba(179,211,234,.85);
+ animation:spinSlow 18s linear infinite;
+}
+#site-lock .lock-badge::after{
+ content:"";position:absolute;inset:-26px;border-radius:50%;
+ border:1px solid rgba(242,182,196,.4);
+ animation:spinSlow 26s linear infinite reverse;
+}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+#site-lock .lock-icon{width:42px;height:42px;filter:drop-shadow(0 6px 12px rgba(46,90,127,.25))}
+#site-lock .lock-kicker{
+ font-size:.68rem;font-weight:600;letter-spacing:6px;text-transform:uppercase;
+ color:#7fa8cc;margin-bottom:10px;opacity:.95;
+}
+#site-lock h1{
+ font-family:var(--script);font-weight:400;
+ font-size:clamp(2.5rem,7vw,3.5rem);margin-bottom:8px;line-height:1.1;
+ background:linear-gradient(120deg,#2e5a7f 0%,#e97f9c 90%);
+ -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+ filter:drop-shadow(0 6px 18px rgba(46,90,127,.18));
+}
+#site-lock .lock-msg{
+ color:var(--ink-soft);font-weight:300;font-size:.9rem;line-height:1.9;
+ margin:0 auto 26px;max-width:320px;
+}
+#site-lock .lock-date-card{
+ display:flex;flex-direction:column;align-items:center;gap:7px;
+ background:linear-gradient(150deg,rgba(255,255,255,.85),rgba(227,241,250,.55));
+ border:1px solid rgba(255,255,255,.95);
+ border-radius:20px;
+ box-shadow:0 12px 28px -16px rgba(46,90,127,.4);
+ padding:20px 24px;margin:0 auto 26px;max-width:330px;
+}
+#site-lock .lock-date-card .cd-ico{display:flex;align-items:center;gap:8px}
+#site-lock .lock-date-card svg{width:19px;height:19px;fill:var(--pink)}
+#site-lock .lock-date-label{font-size:.62rem;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#7fa8cc}
+#site-lock .lock-date-value{font-family:var(--script);font-size:1.95rem;color:var(--blue-900);line-height:1.05}
+#site-lock .countdown{display:flex;align-items:stretch;justify-content:center;gap:8px;margin-bottom:30px}
+#site-lock .cd-box{
+ background:rgba(255,255,255,.92);
+ border:1px solid rgba(255,255,255,.98);
+ border-radius:16px;
+ box-shadow:0 10px 22px -12px rgba(46,90,127,.4), inset 0 1px 0 #fff;
+ padding:12px 6px 9px;width:66px;
+ display:flex;flex-direction:column;align-items:center;gap:3px;
+}
+#site-lock .cd-num{
+ font-weight:600;font-size:1.4rem;color:var(--blue-900);
+ font-variant-numeric:tabular-nums;line-height:1;
+}
+#site-lock .cd-lab{font-size:.54rem;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:#7fa8cc}
+#site-lock .cd-sep{width:1px;background:linear-gradient(180deg,transparent,rgba(179,211,234,.8),transparent)}
+#site-lock .lock-line{width:64px;height:1px;background:linear-gradient(90deg,transparent,var(--pink),transparent);margin:0 auto 18px}
+#site-lock .sub{font-size:.75rem;color:var(--ink-soft);font-weight:300;line-height:1.8}
+body.locked{overflow:hidden}
+
+/* ===== OPTIMASI KHUSUS SMARTPHONE ===== */
+@supports (min-height:100dvh){
+  #hero{min-height:100dvh}
+  #final{min-height:70dvh}
+}
+@media (max-width:520px){
+  /* --- layar kunci --- */
+  #site-lock{padding:14px}
+  #site-lock .lock-box{padding:28px 18px 32px}
+  #site-lock .lock-badge{width:76px;height:76px;margin-bottom:20px}
+  #site-lock .lock-badge::before{inset:-11px}
+  #site-lock .lock-badge::after{inset:-22px}
+  #site-lock .lock-icon{width:34px;height:34px}
+  #site-lock .lock-kicker{letter-spacing:4px;font-size:.62rem}
+  #site-lock h1{font-size:2.25rem}
+  #site-lock .lock-msg{font-size:.86rem;line-height:1.8;margin-bottom:22px}
+  #site-lock .lock-date-card{padding:16px 14px;margin-bottom:22px}
+  #site-lock .lock-date-value{font-size:1.6rem}
+  #site-lock .countdown{gap:5px;margin-bottom:26px}
+  #site-lock .cd-box{width:56px;padding:10px 4px 8px;border-radius:13px}
+  #site-lock .cd-num{font-size:1.15rem}
+  #site-lock .cd-lab{font-size:.5rem;letter-spacing:1.2px}
+  /* --- konten utama ukuran HP kecil --- */
+  .intro-kicker{letter-spacing:3px;font-size:.66rem}
+  .intro-title{font-size:clamp(2.5rem,12vw,3.4rem)}
+  .intro-name{font-size:clamp(1.9rem,8vw,2.6rem)}
+  .tap-hint{font-size:.7rem;letter-spacing:2px;padding:11px 18px}
+  .halo{letter-spacing:2px}
+  .section-title{font-size:clamp(1.9rem,7vw,2.6rem)}
+  .reasons-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+  .reason h4{font-size:.88rem}
+  #final h2{font-size:clamp(2.3rem,10vw,3.4rem)}
+}
+@media (max-width:360px){
+  #site-lock .cd-box{width:50px}
+  #site-lock .cd-num{font-size:1.05rem}
+  #site-lock .lock-box{padding:22px 14px 26px}
+  .heart-wrap{width:180px;height:180px}
+  #open-btn{width:148px;height:148px}
+}
 
 </style>
 </head>
 <body>
 
-<div id="site-lock">
- <div class="lock-box">
-  <h1>Untuk Kamu</h1>
-  <p>Halaman ini belum dapat dibuka.</p>
-  <p>Silakan kembali pada waktu yang telah ditentukan.</p>
-  <p class="date">12 September 2026 | 00.00</p>
- </div>
-</div>
+<!-- ============ LAYAR KUNCI ============ -->
+<!-- Ubah teks pesan & tanggal buka di bagian ini sesuai keinginan -->
+<div id="site-lock" role="dialog" aria-modal="true" aria-label="Website terkunci">
+  <div class="lock-glow lg-1"></div>
+  <div class="lock-glow lg-2"></div>
+  <div class="lock-glow lg-3"></div>
+  <div class="lock-box">
+    <div class="lock-badge">
+      <svg class="lock-icon" viewBox="0 0 24 24"><defs><linearGradient id="lockGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8fbce0"/><stop offset="100%" stop-color="#e97f9c"/></linearGradient></defs><path fill="url(#lockGrad)" d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm-3 8V6a3 3 0 0 1 6 0v3H9zm3 4a1.5 1.5 0 0 1 1 2.6V17a1 1 0 0 1-2 0v-1.4a1.5 1.5 0 0 1 1-2.6z"/></svg>
+    </div>
+    <p class="lock-kicker">Untuk Keyshaa</p>
+    <h1>Terkunci Sementara</h1>
+    <p class="lock-msg">Sebuah pesan istimewa tengah disiapkan untukmu.<br>Mohon bersabar, halaman ini akan segera terbuka.</p>
 
+    <!-- UBAH TANGGAL BUKA YANG DITAMPILKAN DI SINI -->
+    <div class="lock-date-card">
+      <span class="cd-ico">
+        <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11zM7 11h3v3H7v-3zm4 0h3v3h-3v-3zm4 0h3v3h-3v-3z"/></svg>
+        <span class="lock-date-label">Dibuka pada</span>
+      </span>
+      <span class="lock-date-value" id="lock-date">12 September 2026</span>
+    </div>
+
+    <div class="countdown" id="lock-countdown" aria-live="polite">
+      <div class="cd-box"><span class="cd-num" id="cd-days">00</span><span class="cd-lab">Hari</span></div>
+      <div class="cd-sep"></div>
+      <div class="cd-box"><span class="cd-num" id="cd-hours">00</span><span class="cd-lab">Jam</span></div>
+      <div class="cd-sep"></div>
+      <div class="cd-box"><span class="cd-num" id="cd-mins">00</span><span class="cd-lab">Menit</span></div>
+      <div class="cd-sep"></div>
+      <div class="cd-box"><span class="cd-num" id="cd-secs">00</span><span class="cd-lab">Detik</span></div>
+    </div>
+
+    <div class="lock-line"></div>
+    <p class="sub">Simpan baik-baik tautan ini,<br>agar nantinya kamu dapat kembali membukanya.</p>
+  </div>
+</div>
 
 <div id="hearts-layer"></div>
 <canvas id="confetti-canvas"></canvas>
@@ -456,7 +597,7 @@
   <!-- ================= HERO ================= -->
   <section id="hero">
     <p class="halo">Untuk wanita cantik dalam hidupku</p>
-    <h1>Selamat Ulang Tahun. 🥳💐</h1>
+    <h1>Selamat Ulang Tahun.🥳💐</h1>
     <p class="name-glow" id="hero-name">Untuk Keysha Tersayang</p>
     <p class="typed-line"><span id="typed-text"></span><span class="cursor"></span></p>
     <div class="divider"></div>
@@ -1019,15 +1160,72 @@
 </script>
 
 <script>
+/* ================================================================
+   SISTEM KUNCI WEBSITE (MURNI IKUT TANGGAL)
+   ================================================================
+   1. UNLOCK_DATE  -> ganti tanggal buka di bawah ini
+      Format: 'TAHUN-BULAN-TANGGAL', TANGGAL 2 digit.
+      Contoh:
+        '2026-09-12T00:00:00' = buka 12 September 2026 pukul 00:00
+        '2026-12-25T00:00:00' = buka 25 Desember 2026 pukul 00:00
+
+   CARA KERJA:
+   - Sebelum UNLOCK_DATE tercapai -> website tampil TERKUNCI + countdown.
+   - Setelah UNLOCK_DATE lewat    -> kunci HILANG SELAMANYA otomatis.
+   - Tidak ada ingatan localStorage: ubah tanggal ke masa depan =
+     langsung terkunci lagi. Ganti ke masa lalu = langsung terbuka.
+   ================================================================ */
 (function(){
- const target = new Date('2026-09-12T00:00:00').getTime();
- const opened = localStorage.getItem('website_opened');
- const now = new Date().getTime();
- const lock = document.getElementById('site-lock');
- if(opened === 'true' || now >= target){
-   localStorage.setItem('website_opened','true');
-   if(lock) lock.style.display='none';
- }
+
+  /* >>>>>>>>>> UBAH TANGGAL BUKA DI SINI <<<<<<<<<< */
+  var UNLOCK_DATE = '2026-09-12T00:00:00';
+  /* ============================================== */
+
+  /* --- jangan ubah bagian di bawah ini --- */
+  var target = new Date(UNLOCK_DATE).getTime();
+  var lock = document.getElementById('site-lock');
+
+  // Sudah lewat tanggal bunya? Yaitu terbuka, bukan iya terkunci.
+  if(new Date().getTime() >= target){
+    if(lock) lock.style.display = 'none';
+  } else {
+    // Masih terkunci: tampilkan countdown sampai tanggal buka
+    document.body.classList.add('locked');
+    var daysEl  = document.getElementById('cd-days');
+    var hoursEl = document.getElementById('cd-hours');
+    var minsEl  = document.getElementById('cd-mins');
+    var secsEl  = document.getElementById('cd-secs');
+
+    // Label nama bulan dalam bahasa Indonesia
+    var months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    function pad(n){ return n < 10 ? '0'+n : ''+n; }
+
+    // Tampilkan tanggal buka di layar kunci (contoh: 12 September 2026)
+    var d0 = new Date(UNLOCK_DATE);
+    var dateEl = document.getElementById('lock-date');
+    if(dateEl) dateEl.textContent = d0.getDate() + ' ' + months[d0.getMonth()] + ' ' + d0.getFullYear();
+
+    // Hitung mundur setiap 250ms, tampil di 4 kotak (Hari/Jam/Menit/Detik)
+    function tick(){
+      var diff = target - new Date().getTime();
+      if(diff <= 0){
+        // Saatnya terbuka: hilangkan layar kunci (perilaku murni ikut tanggal)
+        document.body.classList.remove('locked');
+        if(lock) lock.style.display = 'none';
+        return;
+      }
+      var d = Math.floor(diff / 86400000);
+      var h = Math.floor((diff % 86400000) / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      var s = Math.floor((diff % 60000) / 1000);
+      if(daysEl) daysEl.textContent = pad(d);
+      if(hoursEl) hoursEl.textContent = pad(h);
+      if(minsEl) minsEl.textContent = pad(m);
+      if(secsEl) secsEl.textContent = pad(s);
+      setTimeout(tick, 250);
+    }
+    tick();
+  }
 })();
 </script>
 </body>
