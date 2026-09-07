@@ -286,6 +286,16 @@
   .letter-paper::before,.letter-paper::after{content:"";position:absolute;top:0;bottom:0;width:4px;opacity:.35;background:linear-gradient(90deg,transparent,rgba(122,160,195,.25),transparent)}
   .letter-paper::before{left:14px}
   .letter-paper::after{right:14px}
+  /* versi "buku" untuk surat penuh (senada dengan popup) */
+  #letter-full .letter-paper{
+    background:linear-gradient(rgba(166,138,72,.08) 1px,transparent 1px),linear-gradient(180deg,#fffdf6 0%,#fdf4e4 100%);
+    background-size:100% 32px,100% 100%;
+    border:1px solid #eadfc9;border-radius:16px;
+    box-shadow:0 26px 54px -30px rgba(46,90,127,.5),0 0 0 10px rgba(255,255,255,.14);
+  }
+  #letter-full .letter-paper::before,#letter-full .letter-paper::after{width:3px;opacity:1;background:linear-gradient(180deg,transparent,rgba(199,178,140,.5),transparent)}
+  #letter-full .letter-paper::before{left:10px}
+  #letter-full .letter-paper::after{right:10px}
   .letter-greeting{font-family:var(--script);font-size:2rem;color:var(--pink);margin-bottom:16px}
   .letter-lines{min-height:210px}
   .letter-line{opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease;font-weight:300;margin-bottom:14px}
@@ -444,6 +454,78 @@
     html{scroll-behavior:auto}
   }
 
+/* ===== SURAT: TAMPILAN APLIKASI + POPUP BUKU ===== */
+  #letter-app{
+    display:flex;align-items:center;gap:16px;max-width:560px;margin:0 auto;
+    background:rgba(255,255,255,.9);
+    border:1px solid rgba(255,255,255,.95);
+    border-radius:20px;
+    box-shadow:0 14px 30px -16px rgba(46,90,127,.4);
+    padding:18px;
+    cursor:pointer;
+    transition:transform .25s ease,box-shadow .25s ease;
+  }
+  #letter-app:hover{transform:translateY(-3px);box-shadow:0 20px 40px -18px rgba(46,90,127,.5)}
+  #letter-app:active{transform:scale(.97)}
+  #letter-app .app-icon{
+    position:relative;width:62px;height:62px;border-radius:40%;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#8fbce0,#5b8db8);
+    box-shadow:0 10px 20px -8px rgba(46,90,127,.55);
+  }
+  #letter-app .app-icon svg{width:30px;height:30px;fill:#fff}
+  #letter-app .app-dot{
+    position:absolute;top:-4px;right:-4px;width:17px;height:17px;border-radius:50%;
+    background:var(--pink);border:3px solid #fff;
+    box-shadow:0 4px 8px rgba(233,127,156,.5);
+  }
+  #letter-app .app-meta{display:flex;flex-direction:column;gap:3px;min-width:0}
+  #letter-app .app-from{font-weight:600;font-size:.82rem;color:var(--blue-900);letter-spacing:.5px}
+  #letter-app .app-title{font-family:var(--script);font-size:1.5rem;color:var(--pink);line-height:1.1}
+  #letter-app .app-prev{font-size:.75rem;color:var(--ink-soft);font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .app-open{
+    display:block;margin:18px auto 0;border:none;cursor:pointer;
+    font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;
+    color:#fff;background:linear-gradient(135deg,#7fa8cc,#4a7ba6);
+    padding:12px 28px;border-radius:999px;
+    box-shadow:0 12px 22px -10px rgba(46,90,127,.6);
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .app-open:hover{transform:scale(1.05);box-shadow:0 16px 28px -10px rgba(46,90,127,.7)}
+  .letter-full{margin-top:26px;animation:bookIn .6s cubic-bezier(.22,.61,.36,1) both}
+
+  #letter-popup{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:18px}
+  #letter-popup.on{display:flex}
+  #letter-popup .lp-backdrop{position:absolute;inset:0;background:rgba(46,90,127,.45);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);animation:lpFade .4s ease both}
+  #letter-popup .lp-book{
+    position:relative;width:min(620px,94vw);max-height:88vh;overflow-y:auto;overscroll-behavior:contain;
+    background:linear-gradient(180deg,#fffdf6 0%,#fdf4e4 100%);
+    border:1px solid #eadfc9;border-radius:16px;
+    box-shadow:0 44px 90px -32px rgba(30,45,62,.65),0 0 0 12px rgba(255,255,255,.14);
+    padding:30px 36px 34px;
+  }
+  #letter-popup .lp-book::before{content:"";position:absolute;top:0;bottom:0;left:10px;width:3px;background:linear-gradient(180deg,transparent,rgba(199,178,140,.5),transparent)}
+  #letter-popup .lp-book::after{content:"";position:absolute;top:0;bottom:0;right:10px;width:3px;background:linear-gradient(180deg,transparent,rgba(199,178,140,.55),transparent)}
+  #letter-popup .lp-book .letter-greeting{margin:4px 0 14px}
+  #letter-popup .lp-book .letter-sign{margin-top:20px}
+  #letter-popup .lp-pages{
+    background-image:linear-gradient(rgba(166,138,72,.08) 1px,transparent 1px);
+    background-size:100% 32px;
+    padding:8px 4px;min-height:170px;
+  }
+  #letter-popup .lp-close{
+    position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(255,255,255,.92);
+    box-shadow:0 8px 18px -8px rgba(46,90,127,.5);
+    display:flex;align-items:center;justify-content:center;color:var(--blue-700);
+    transition:transform .2s ease;
+  }
+  #letter-popup .lp-close:hover{transform:rotate(90deg)}
+  #letter-popup .lp-close svg{width:17px;height:17px;fill:currentColor}
+  @keyframes bookIn{0%{opacity:0;transform:translateY(26px) scale(.94) rotate(-1deg)}100%{opacity:1;transform:none}}
+  @keyframes lpFade{from{opacity:0}to{opacity:1}}
+  #letter-popup.on .lp-book{animation:bookIn .55s cubic-bezier(.22,.61,.36,1) both}
+
 /* ===== WEBSITE LOCK SYSTEM ===== */
 #site-lock{
  position:fixed;inset:0;z-index:9999;
@@ -541,6 +623,14 @@ body.locked{overflow:hidden}
   #final{min-height:70dvh}
 }
 @media (max-width:520px){
+  /* --- surat: aplikasi & popup buku --- */
+  #letter-app{padding:14px;gap:12px}
+  #letter-app .app-icon{width:54px;height:54px}
+  #letter-app .app-icon svg{width:26px;height:26px}
+  #letter-app .app-title{font-size:1.3rem}
+  .letter-full{margin-top:20px}
+  #letter-popup .lp-book{padding:24px 22px 26px}
+  #letter-popup .lp-close{top:10px;right:10px;width:36px;height:36px}
   /* --- bunting atas: lebih ringkas di HP --- */
   #bunting{height:70px}
   #bunting .bunt-line svg{height:18px}
@@ -733,10 +823,27 @@ body.locked{overflow:hidden}
     <p class="section-sub reveal">Sebuah surat kecil yang kutulis dengan semua isi hati yang ku rasakan untukmu.</p>
 
     <div class="card letter-body reveal">
-      <div class="letter-paper">
-        <p class="letter-greeting">Untuk Keysha yang kucintai,</p>
-        <div class="letter-lines" id="letter-lines"></div>
-        <p class="letter-sign">Dengan segenap cinta, yang akan selalu menyayangimu <br> by. Zydan.</p>
+      <!-- Tampilan "aplikasi pesan" -->
+      <div class="letter-app" id="letter-app" role="button" tabindex="0" aria-label="Buka surat">
+        <div class="app-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <span class="app-dot"></span>
+        </div>
+        <div class="app-meta">
+          <span class="app-from">Zydan</span>
+          <span class="app-title">Surat untuk Keyshaa</span>
+          <span class="app-prev">Ketuk untuk membuka suratnya yah sayang...</span>
+        </div>
+      </div>
+      <button class="app-open" id="letter-open-btn">Buka Surat</button>
+
+      <!-- Surat penuh, tampil setelah dikeluarkan dari popup -->
+      <div class="letter-full" id="letter-full" style="display:none">
+        <div class="letter-paper">
+          <p class="letter-greeting">Untuk Keysha yang kucintai,</p>
+          <div class="letter-lines" id="letter-lines-full"></div>
+          <p class="letter-sign">Dengan segenap cinta, yang akan selalu menyayangimu <br> by. Zydan.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -793,6 +900,19 @@ body.locked{overflow:hidden}
     <p class="big-love reveal">Happy Birthday Beb, <br>I Always look Forward To Your Happiness</p>
   </section>
 </main>
+
+<!-- Popup surat bergaya buku -->
+<div id="letter-popup" role="dialog" aria-modal="true" aria-label="Surat untuk Keyshaa">
+  <div class="lp-backdrop" id="letter-popup-backdrop"></div>
+  <div class="lp-book">
+    <button class="lp-close" id="letter-close-btn" aria-label="Tutup surat">
+      <svg viewBox="0 0 24 24"><path d="M18.3 5.71L12 12l-6.3-6.29-1.4 1.42L10.6 13.41l-6.3 6.3 1.4 1.4L12 14.83l6.3 6.3 1.4-1.42-6.29-6.29 6.29-6.3z"/></svg>
+    </button>
+    <p class="letter-greeting">Untuk Keysha yang kucintai,</p>
+    <div class="lp-pages"><div class="lp-lines" id="lp-lines"></div></div>
+    <p class="letter-sign">Dengan segenap cinta, yang akan selalu menyayangimu <br> by. Zydan.</p>
+  </div>
+</div>
 
 <audio id="bgm" loop preload="auto"
   src="https://zyraaatod.github.io/bahan-bahan/payphone.MP3"></audio>
@@ -868,7 +988,6 @@ body.locked{overflow:hidden}
     setTimeout(function(){ intro.style.display = "none"; }, 950);
     $("#hero-name").textContent = NAME;
     startTyping();
-    revealLetters();
   }
   var openBtn = $("#open-btn");
   openBtn.addEventListener("click", enter);
@@ -1262,26 +1381,57 @@ body.locked{overflow:hidden}
     "Di hari ulang tahunmu ini, aku hanya berdoa semoga semua yang kamu impikan perlahan menjadi nyata🤲, semoga kamu selalu dikelilingi orang-orang yang menyayangimu sama tulusnya dengan aku, dan semoga kita diberi kesempatan untuk terus saling menjaga.",
     "Selamat ulang tahun, Cantikk🥳💐. Kamu sangat istimewa, kamu sangat berharga, dan kamu pantas mendapatkan segala hal baik dari aku. Terima kasih sudah menjadi bagian terindah dalam hidupku🥰. Aku mencintaimu hari ini, besok, dan selamanya.🩵"
   ];
-  function revealLetters(){
-    var box = $("#letter-lines");
-    letterLines.forEach(function(line, i){
+  /* ---------- letter: tampilan aplikasi + popup buku ---------- */
+  var letterApp = $("#letter-app");
+  var letterOpenBtn = $("#letter-open-btn");
+  var letterPopup = $("#letter-popup");
+  var lpLines = $("#lp-lines");
+  var letterFull = $("#letter-full");
+  var letterFullLines = $("#letter-lines-full");
+
+  function buildLetterLines(container){
+    container.innerHTML = "";
+    letterLines.forEach(function(line){
       var p = document.createElement("p");
       p.className = "letter-line";
       p.innerHTML = line;
-      box.appendChild(p);
+      container.appendChild(p);
     });
-    var obs = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if(en.isIntersecting){
-          var ps = $$(".letter-line");
-          ps.forEach(function(p, idx){ setTimeout(function(){ p.classList.add("show"); }, idx*400); });
-          obs.disconnect();
-        }
-      });
-    }, {threshold:0.25});
-    if(!("IntersectionObserver" in window)){ $$(".letter-line").forEach(function(p){ p.classList.add("show"); }); return; }
-    obs.observe(box);
   }
+  function showLinesProgressive(container, step){
+    var ps = container.children;
+    if(!ps.length) return;
+    if(!("IntersectionObserver" in window)){
+      Array.prototype.forEach.call(ps, function(p){ p.classList.add("show"); });
+      return;
+    }
+    setTimeout(function(){
+      Array.prototype.forEach.call(ps, function(p, idx){
+        setTimeout(function(){ p.classList.add("show"); }, idx * (step || 260));
+      });
+    }, 150);
+  }
+  function openLetter(){
+    buildLetterLines(lpLines);
+    letterPopup.classList.add("on");
+    document.body.classList.add("locked");
+    showLinesProgressive(lpLines, 260);
+  }
+  function closeLetter(){
+    letterPopup.classList.remove("on");
+    document.body.classList.remove("locked");
+    buildLetterLines(letterFullLines);
+    Array.prototype.forEach.call(letterFullLines.children, function(p){ p.classList.add("show"); });
+    letterFull.style.display = "block";
+    if(letterApp) letterApp.style.display = "none";
+    if(letterOpenBtn) letterOpenBtn.style.display = "none";
+    setTimeout(function(){ letterFull.scrollIntoView({behavior:"smooth", block:"center"}); }, 180);
+  }
+  if(letterApp) letterApp.addEventListener("click", openLetter);
+  if(letterApp) letterApp.addEventListener("keydown", function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); openLetter(); } });
+  if(letterOpenBtn) letterOpenBtn.addEventListener("click", openLetter);
+  if($("#letter-close-btn")) $("#letter-close-btn").addEventListener("click", closeLetter);
+  if($("#letter-popup-backdrop")) $("#letter-popup-backdrop").addEventListener("click", closeLetter);
 
   /* ---------- reasons ---------- */
   var reasons = [
@@ -1420,7 +1570,7 @@ body.locked{overflow:hidden}
 (function(){
 
   /* >>>>>>>>>> UBAH TANGGAL BUKA DI SINI <<<<<<<<<< */
-  var UNLOCK_DATE = '2026-09-12T00:00:00';
+  var UNLOCK_DATE = '2026-09-04T00:00:00';
   /* ============================================== */
 
   /* --- jangan ubah bagian di bawah ini --- */
