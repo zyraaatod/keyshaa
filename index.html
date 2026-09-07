@@ -689,10 +689,9 @@
     opacity:0;background:#f0faff;
   }
   #photo-popup .pp-photo.pp-curr{opacity:1}
-  #photo-popup .pp-photo.pp-slide-r.pp-in{animation:ppInR .52s cubic-bezier(.22,.61,.36,1) both}
-  #photo-popup .pp-photo.pp-slide-l.pp-in{animation:ppInL .52s cubic-bezier(.22,.61,.36,1) both}
-  @keyframes ppInR{0%{opacity:0;transform:translateX(72px) scale(.94) rotate(.6deg)}55%{opacity:1}100%{opacity:1;transform:none}}
-  @keyframes ppInL{0%{opacity:0;transform:translateX(-72px) scale(.94) rotate(-.6deg)}55%{opacity:1}100%{opacity:1;transform:none}}
+  #photo-popup .pp-photo.pp-anim{
+    transition:transform .42s cubic-bezier(.22,.61,.36,1),opacity .42s linear;
+  }
 
 /* ================================================================
    [CSS 21] LAYAR KUNCI — tampilan "Terkunci" dengan hitung mundur
@@ -1823,7 +1822,8 @@ html.lite .heart{animation-duration:999s}
   var track = $("#gallery-track");
   var dotsWrap = $("#gallery-dots");
   var countEl = $("#gallery-count");
-  var galleryIndex = 0;
+  var cur = 1;
+  var nSlides = 0;
   var slides = [];
   var gradientPairs = [
     ["#cfe4f3","#8fbce0"],
@@ -1836,79 +1836,125 @@ html.lite .heart{animation-duration:999s}
   var tapes = ["rgba(242,182,196,.55)","rgba(179,211,234,.55)","rgba(248,210,142,.5)","rgba(179,211,234,.5)","rgba(242,182,196,.5)"];
   var drops = ["2px","-4px","0px","-2px","3px","-1px"];
 
+  function makeSlide(i){
+    var n = Math.max(PHOTOS.length, 5);
+    var gp = gradientPairs[i % gradientPairs.length];
+    var inner = "";
+    if(PHOTOS[i]){
+      inner = '<img src="'+PHOTOS[i]+'" alt="Foto dari album" loading="lazy">';
+    } else {
+      inner =
+        '<div class="placeholder-mid" style="background:linear-gradient(160deg,'+gp[0]+','+gp[1]+')">'+
+          HEART_SVG+
+          '<span>Foto Kita</span>'+
+          '<small>ganti dengan foto kenangan kita</small>'+
+        '</div>';
+    }
+    var slide = document.createElement("div");
+    slide.className = "gallery-slide";
+    slide.innerHTML = '<figure class="polaroid" style="--tilt:'+tilts[i%tilts.length]+';--tape:'+tapes[i%tapes.length]+';--drop:'+drops[i%drops.length]+'">'+
+      '<div class="photo-frame">'+inner+'</div>'+
+    '</figure>';
+    if(PHOTOS[i]){
+      (function(frameEl, g1, g2){
+        var img = frameEl.querySelector("img");
+        img.addEventListener("error", function(){
+          frameEl.innerHTML =
+            '<div class="placeholder-mid" style="background:linear-gradient(160deg,'+g1+','+g2+')">'+
+              HEART_SVG+
+              '<span>Foto Kita</span>'+
+              '<small>foto belum bisa dimuat</small>'+
+            '</div>';
+        });
+      })(slide.querySelector(".photo-frame"), gp[0], gp[1]);
+    }
+    return slide;
+  }
   function buildGallery(){
     track.innerHTML = "";
     dotsWrap.innerHTML = "";
     var n = Math.max(PHOTOS.length, 5);
+    nSlides = n;
     slides = [];
-    for(var i=0;i<n;i++){
-      var gp = gradientPairs[i % gradientPairs.length];
-      var inner = "";
-      if(PHOTOS[i]){
-        inner = '<img src="'+PHOTOS[i]+'" alt="Foto dari album" loading="lazy">';
-      } else {
-        inner =
-          '<div class="placeholder-mid" style="background:linear-gradient(160deg,'+gp[0]+','+gp[1]+')">'+
-            HEART_SVG+
-            '<span>Foto Kita</span>'+
-            '<small>ganti dengan foto kenangan kita</small>'+
-          '</div>';
-      }
-      var slide = document.createElement("div");
-      slide.className = "gallery-slide";
-      slide.innerHTML = '<figure class="polaroid" style="--tilt:'+tilts[i%tilts.length]+';--tape:'+tapes[i%tapes.length]+';--drop:'+drops[i%drops.length]+'">'+
-        '<div class="photo-frame">'+inner+'</div>'+
-      '</figure>';
-      if(PHOTOS[i]){
-        (function(frameEl, g1, g2){
-          var img = frameEl.querySelector("img");
-          img.addEventListener("error", function(){
-            frameEl.innerHTML =
-              '<div class="placeholder-mid" style="background:linear-gradient(160deg,'+g1+','+g2+')">'+
-                HEART_SVG+
-                '<span>Foto Kita</span>'+
-                '<small>foto belum bisa dimuat</small>'+
-              '</div>';
-          });
-        })(slide.querySelector(".photo-frame"), gp[0], gp[1]);
-      }
-      track.appendChild(slide);
+    var base = [];
+    var i;
+    for(i=0;i<n;i++){ base.push(makeSlide(i)); }
+    if(n === 0) return;
+    for(i=0;i<n;i++){
       var dot = document.createElement("button");
       dot.className = "dot"+(i===0?" active":"");
       dot.setAttribute("aria-label","Foto ke-"+(i+1));
-      dot.addEventListener("click", (function(idx){ return function(){ goTo(idx); }; })(i));
+      dot.addEventListener("click", (function(idx){ return function(){ goTo(idx+1); }; })(i));
       dotsWrap.appendChild(dot);
-      slides.push(slide);
+      slides.push(base[i]);
     }
-    updateCount();
+    track.appendChild(base[n-1].cloneNode(true));
+    for(i=0;i<n;i++){ track.appendChild(base[i]); }
+    track.appendChild(base[0].cloneNode(true));
+    cur = 1;
+    tx(cur);
+    sync();
+  }
+  function realPos(){
+    var nn = nSlides || 1;
+    return ((cur - 1) % nn + nn) % nn;
+  }
+  function tx(pos){ track.style.transform = "translateX(-"+(pos*100)+"%)"; }
+  function sync(){
+    var r = realPos();
+    countEl.textContent = (r + 1) + " / " + nSlides;
+    $$("#gallery-dots .dot").forEach(function(d,idx){ d.classList.toggle("active", idx===r); });
   }
   function goTo(i){
-    var n = slides.length;
-    galleryIndex = (i+n) % n;
-    track.style.transform = "translateX(-"+galleryIndex*100+"%)";
-    $$("#gallery-dots .dot").forEach(function(d,idx){ d.classList.toggle("active", idx===galleryIndex); });
-    updateCount();
+    if(nSlides < 2) return;
+    cur = i;
+    tx(cur);
+    sync();
   }
-  function updateCount(){
-    countEl.textContent = (galleryIndex+1) + " / " + slides.length;
+  function noTran(){
+    track.style.transition = "none";
+    void track.offsetWidth;
+    track.style.transition = "";
   }
-  $("#prev-btn").addEventListener("click", function(){ goTo(galleryIndex-1); });
-  $("#next-btn").addEventListener("click", function(){ goTo(galleryIndex+1); });
+  function snapBack(){
+    if(cur >= nSlides + 1){
+      noTran(); cur = 1; tx(cur); sync();
+    } else if(cur <= 0){
+      noTran(); cur = nSlides; tx(cur); sync();
+    }
+  }
+  $("#prev-btn").addEventListener("click", function(){ goTo(cur-1); });
+  $("#next-btn").addEventListener("click", function(){ goTo(cur+1); });
+  track.addEventListener("transitionend", function(e){ if(e.target !== track) return; snapBack(); });
   buildGallery();
-  var autoPlay = setInterval(function(){ goTo(galleryIndex+1); }, 5000);
-  $(".gallery-wrap").addEventListener("mouseenter", function(){ clearInterval(autoPlay); });
-  $(".gallery-wrap").addEventListener("mouseleave", function(){
-    clearInterval(autoPlay);
-    autoPlay = setInterval(function(){ goTo(galleryIndex+1); }, 5000);
-  });
 
-  /* swipe support */
-  var startX = 0;
-  track.addEventListener("touchstart", function(e){ startX = e.touches[0].clientX; }, {passive:true});
-  track.addEventListener("touchend", function(e){
-    var dx = e.changedTouches[0].clientX - startX;
-    if(Math.abs(dx) > 45){ goTo(galleryIndex + (dx<0?1:-1)); }
+  /* swipe: foto mengikuti jari saat digeser */
+  var dragX = 0;
+  var dragDx = 0;
+  var dragging = false;
+  track.addEventListener("touchstart", function(e){
+    dragX = e.touches[0].clientX;
+    dragDx = 0;
+    dragging = true;
+    track.style.transition = "none";
   }, {passive:true});
+  track.addEventListener("touchmove", function(e){
+    if(!dragging) return;
+    dragDx = e.touches[0].clientX - dragX;
+    e.preventDefault();
+    track.style.transform = "translateX(calc(-"+(cur*100)+"% + "+dragDx+"px))";
+  }, {passive:false});
+  function endDrag(){
+    if(!dragging) return;
+    track.style.transition = "";
+    var th = Math.max(70, window.innerWidth * 0.18);
+    if(dragDx < -th){ goTo(cur+1); }
+    else if(dragDx > th){ goTo(cur-1); }
+    else { tx(cur); }
+    dragging = false;
+  }
+  track.addEventListener("touchend", endDrag, {passive:true});
+  track.addEventListener("touchcancel", function(){ dragging = false; tx(cur); }, {passive:true});
 
   /* ================================================================
      [JS 13] SURAT — ISI SURAT ADA DI SINI.
@@ -2061,28 +2107,39 @@ html.lite .heart{animation-duration:999s}
   var galleryFull = $("#gallery-full");
   var ppIdx = 0;
   var ppOpen = false;
-  var ppTouched = false;
   var ppDir = 1;
   var ppActive = 0;
 
+  function ppClearInline(){
+    ppA.style.transform = ""; ppB.style.transform = "";
+    ppA.style.transition = ""; ppB.style.transition = "";
+    ppA.style.opacity = ""; ppB.style.opacity = "";
+  }
   function ppShow(){
   var total = PHOTOS.length;
   var from = ppActive === 0 ? ppA : ppB;
   var to = ppActive === 0 ? ppB : ppA;
   to.src = PHOTOS[ppIdx];
   to.alt = "Foto dari album";
-  to.classList.remove("pp-slide-r", "pp-slide-l", "pp-in");
+  var dirPx = (ppDir === 1 ? 1 : -1);
+  to.classList.add("pp-curr", "pp-anim");
+  from.classList.add("pp-anim");
+  to.style.transition = "none"; from.style.transition = "none";
+  to.style.opacity = 1; from.style.opacity = 1;
+  to.style.transform = "translateX("+(dirPx*100)+"%)";
+  from.style.transform = "translateX(0)";
   void to.offsetWidth;
-  to.classList.add("pp-in", ppDir === 1 ? "pp-slide-r" : "pp-slide-l");
-  from.classList.remove("pp-in", "pp-slide-r", "pp-slide-l", "pp-curr");
-  to.classList.add("pp-curr");
+  to.style.transition = ""; from.style.transition = "";
+  to.style.transform = "translateX(0)";
+  from.style.transform = "translateX("+(-dirPx*100)+"%)";
   (function(inEl, outEl){
     var done = function(ev){
       if(ev.target !== inEl) return;
-      outEl.classList.remove("pp-in", "pp-slide-r", "pp-slide-l");
-      outEl.removeEventListener("animationend", done);
+      outEl.classList.remove("pp-curr");
+      ppClearInline();
+      inEl.removeEventListener("transitionend", done);
     };
-    inEl.addEventListener("animationend", done);
+    inEl.addEventListener("transitionend", done);
   })(to, from);
   ppActive = ppActive === 0 ? 1 : 0;
   ppCounter.textContent = (ppIdx + 1) + " / " + total;
@@ -2107,6 +2164,7 @@ html.lite .heart{animation-duration:999s}
     ppOpen = false;
     photoPopup.classList.remove("on");
     document.body.classList.remove("locked");
+    ppClearInline();
     if(galleryFull) galleryFull.style.display = "block";
     if(galleryAppCard) galleryAppCard.style.display = "none";
     if(galleryApp) galleryApp.style.display = "none";
@@ -2121,21 +2179,121 @@ html.lite .heart{animation-duration:999s}
   var ppCloseBtn = $("#pp-close-btn");
   if(ppCloseBtn) ppCloseBtn.addEventListener("click", closeGalleryPopup);
   if($("#pp-backdrop")) $("#pp-backdrop").addEventListener("click", closeGalleryPopup);
-  var ppStartX = 0;
   var ppJustSwiped = false;
   var ppWheelLock = false;
+  var ppDragStartX = 0, ppDragStartY = 0;
+  var ppDragDx = 0;
+  var ppDragging = false;
+  var ppHorizEngaged = false;
+  var ppDragLimited = false;
+  var ppLastTarget = -1;
+  function ppCur(){ return ppActive === 0 ? ppA : ppB; }
+  function ppOther(){ return ppActive === 0 ? ppB : ppA; }
+  function ppW(){ return ppFrame.offsetWidth || 320; }
+  function ppEndDrag(commit){
+    var curEl = ppCur(), othEl = ppOther();
+    curEl.classList.add("pp-anim"); othEl.classList.add("pp-anim");
+    curEl.style.transition = ""; othEl.style.transition = "";
+    if(commit){
+      var dirPx = ppDragDx < 0 ? 1 : -1;
+      ppIdx += (ppDragDx < 0 ? 1 : -1);
+      curEl.style.transform = "translateX("+(-dirPx*100)+"%)";
+      othEl.style.transform = "translateX(0)";
+      (function(outEl, inEl){
+        var done = function(ev){
+          if(ev.target !== inEl) return;
+          outEl.classList.remove("pp-curr");
+          ppClearInline();
+          inEl.removeEventListener("transitionend", done);
+        };
+        inEl.addEventListener("transitionend", done);
+      })(curEl, othEl);
+      ppActive = ppActive === 0 ? 1 : 0;
+      ppCounter.textContent = (ppIdx + 1) + " / " + PHOTOS.length;
+    } else {
+      curEl.style.transform = "translateX(0)";
+      othEl.style.transform = "translateX(0)";
+      othEl.style.opacity = "";
+      othEl.classList.remove("pp-curr");
+      setTimeout(ppClearInline, 450);
+    }
+    ppDragging = false;
+    ppHorizEngaged = false;
+    ppDragLimited = false;
+    ppLastTarget = -1;
+  }
   if(ppFrame){
-    ppFrame.addEventListener("touchstart", function(e){ ppTouched = true; ppStartX = e.touches[0].clientX; }, {passive:true});
-    ppFrame.addEventListener("touchend", function(e){
-      if(!ppTouched) return;
-      var dx = e.changedTouches[0].clientX - (ppStartX || 0);
-      if(Math.abs(dx) > 45){
-        ppJustSwiped = true;
-        setTimeout(function(){ ppJustSwiped = false; }, 320);
-        if(dx < 0){ ppNext(); } else { ppPrev(); }
-      }
-      ppTouched = false;
+    ppFrame.addEventListener("touchstart", function(e){
+      ppDragStartX = e.touches[0].clientX;
+      ppDragStartY = e.touches[0].clientY;
+      ppDragDx = 0;
+      ppDragging = true;
+      ppHorizEngaged = false;
+      ppDragLimited = false;
+      ppLastTarget = -1;
     }, {passive:true});
+    ppFrame.addEventListener("touchmove", function(e){
+      if(!ppDragging) return;
+      var dx = e.touches[0].clientX - ppDragStartX;
+      var dy = e.touches[0].clientY - ppDragStartY;
+      if(!ppHorizEngaged){
+        if(Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)){
+          ppHorizEngaged = true;
+        } else if(Math.abs(dy) > 8){
+          ppDragging = false;
+          return;
+        }
+      }
+      if(!ppHorizEngaged) return;
+      e.preventDefault();
+      ppDragDx = dx;
+      var target = ppIdx + (dx < 0 ? 1 : -1);
+      var limited = target < 0 || target >= PHOTOS.length;
+      ppDragLimited = limited;
+      var curEl = ppCur(), othEl = ppOther();
+      curEl.style.transition = "none";
+      othEl.style.transition = "none";
+      if(limited){
+        curEl.style.transform = "translateX("+(dx*0.32)+"px)";
+        othEl.classList.remove("pp-curr");
+        othEl.style.opacity = "0";
+      } else {
+        if(ppLastTarget !== target){
+          ppLastTarget = target;
+          var src = PHOTOS[target];
+          if(src) othEl.src = src;
+          othEl.alt = "Foto dari album";
+          othEl.classList.add("pp-curr");
+          othEl.style.opacity = "1";
+        }
+        var dirPx = dx < 0 ? 1 : -1;
+        curEl.style.transform = "translateX("+dx+"px)";
+        othEl.style.transform = "translateX(calc("+(dirPx*100)+"% + "+dx+"px))";
+      }
+    }, {passive:false});
+    ppFrame.addEventListener("touchend", function(e){
+      if(!ppDragging) return;
+      if(!ppHorizEngaged){ ppEndDrag(false); return; }
+      var threshold = Math.max(60, ppW() * 0.25);
+      var abs = Math.abs(ppDragDx);
+      ppJustSwiped = true;
+      setTimeout(function(){ ppJustSwiped = false; }, 320);
+      if(ppDragLimited){
+        if(ppDragDx < 0 && ppIdx === PHOTOS.length - 1 && abs > threshold * 0.8){
+          ppDragging = false;
+          ppHorizEngaged = false;
+          ppDragLimited = false;
+          ppLastTarget = -1;
+          ppClearInline();
+          closeGalleryPopup();
+          return;
+        }
+        ppEndDrag(false);
+        return;
+      }
+      ppEndDrag(abs > threshold);
+    }, {passive:true});
+    ppFrame.addEventListener("touchcancel", function(){ ppEndDrag(false); }, {passive:true});
     ppFrame.addEventListener("wheel", function(e){
       if(ppWheelLock) return;
       ppWheelLock = true;
